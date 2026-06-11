@@ -47,10 +47,3 @@ model Setting {
   value String
 }
 
-model Admin {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String   @default("Admin")
-  createdAt DateTime @default(now())
-}
