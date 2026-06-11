@@ -5,6 +5,8 @@ import { FeaturedProducts } from '@/components/home/featured-products'
 import { CTASection } from '@/components/home/cta-section'
 import { TrustBadges } from '@/components/home/trust-badges'
 
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   return (
     <>
