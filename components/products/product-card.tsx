@@ -6,7 +6,6 @@ import { useLanguage } from '@/hooks/use-language'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Product } from '@/types'
-import { parseJsonSafe } from '@/lib/utils'
 import { Tag } from 'lucide-react'
 
 interface ProductCardProps {
@@ -16,8 +15,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { t, lang } = useLanguage()
 
-  const images = parseJsonSafe<string[]>(product.images as unknown as string, [])
-  const firstImage = images[0]
+  const firstImage = product.images[0]
 
   const displayName = lang === 'ar' && product.nameAr ? product.nameAr : product.name
 

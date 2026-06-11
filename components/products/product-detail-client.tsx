@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ProductCard } from './product-card'
 import { RFQForm } from '@/components/rfq/rfq-form'
-import { parseJsonSafe } from '@/lib/utils'
 import { ChevronRight, Package, Tag } from 'lucide-react'
 
 interface Props {
@@ -21,10 +20,10 @@ export function ProductDetailClient({ product, relatedProducts }: Props) {
   const { lang } = useLanguage()
   const [activeImage, setActiveImage] = useState(0)
 
-  const images = parseJsonSafe<string[]>(product.images as unknown as string, [])
+  const images = product.images
   const displayName = lang === 'ar' && product.nameAr ? product.nameAr : product.name
   const displayDesc = lang === 'ar' && product.descriptionAr ? product.descriptionAr : product.description
-  const specs = parseJsonSafe<{ key: string; value: string }[]>(product.specs as unknown as string, [])
+  const specs = product.specs
 
   const categoryLabel =
     lang === 'ar'
