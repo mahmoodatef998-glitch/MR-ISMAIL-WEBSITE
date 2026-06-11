@@ -1,11 +1,22 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import bcrypt from 'bcryptjs'
 import path from 'path'
 
-const dbPath = path.join(process.cwd(), 'dev.db')
-const adapter = new PrismaBetterSqlite3({ url: dbPath })
-const prisma = new PrismaClient({ adapter } as any)
+// Support both SQLite (dev) and PostgreSQL (prod)
+function createClient() {
+  const dbUrl = process.env.DATABASE_URL ?? `file:${path.join(process.cwd(), 'dev.db')}`
+  if (dbUrl.startsWith('file:') || dbUrl.startsWith('postgresql') === false && !dbUrl.startsWith('postgres')) {
+    // SQLite
+    const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3')
+    const dbPath = path.join(process.cwd(), 'dev.db')
+    const adapter = new PrismaBetterSqlite3({ url: dbPath })
+    return new PrismaClient({ adapter } as any)
+  }
+  // PostgreSQL
+  return new PrismaClient()
+}
+
+const prisma = createClient()
 
 async function main() {
   console.log('🌱 Seeding database...')

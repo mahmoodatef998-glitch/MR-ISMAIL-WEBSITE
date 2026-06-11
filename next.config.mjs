@@ -5,13 +5,10 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: '**.cloudinary.com' },
       { protocol: 'https', hostname: '**.googleapis.com' },
+      { protocol: 'https', hostname: '**.vercel.app' },
     ],
   },
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['localhost:3000'],
-    },
-  },
+  // Remove serverActions restriction — allow all origins (Vercel handles security)
 }
 
 export default nextConfig
