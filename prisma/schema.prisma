@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  nameAr        String
+  slug          String   @unique
+  category      String
+  brand         String
+  description   String
+  descriptionAr String
+  specs         String   @default("[]")
+  moq           Int      @default(1)
+  images        String   @default("[]")
+  status        String   @default("active")
+  featured      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model RFQ {
+  id           String   @id @default(cuid())
+  refNumber    String   @unique
+  customerName String
+  company      String
+  email        String
+  phone        String
+  country      String
+  city         String
+  items        String
+  message      String?
+  status       String   @default("new")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  createdAt DateTime @default(now())
+}
