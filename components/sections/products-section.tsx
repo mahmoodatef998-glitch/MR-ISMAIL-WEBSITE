@@ -60,7 +60,7 @@ export function ProductsSection({ products }: Props) {
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 cat === c.key
                   ? 'bg-gradient-to-r from-[#c8a96e] to-[#e8c97a] text-[#050b18] shadow-lg shadow-[#c8a96e]/20'
-                  : 'bg-white/[0.04] border border-white/8 text-gray-400 hover:text-white hover:border-white/15'
+                  : 'bg-white/[0.04] border border-white/[0.08] text-gray-400 hover:text-white hover:border-white/[0.15]'
               }`}
             >
               {lang === 'ar' ? c.ar : c.en}
@@ -85,7 +85,7 @@ export function ProductsSection({ products }: Props) {
               <div className="text-center">
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#c8a96e]/25 text-[#c8a96e] font-semibold rounded-xl hover:bg-[#c8a96e]/8 hover:border-[#c8a96e]/50 transition-all text-sm"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#c8a96e]/25 text-[#c8a96e] font-semibold rounded-xl hover:bg-[#c8a96e]/[0.08] hover:border-[#c8a96e]/50 transition-all text-sm"
                 >
                   {lang === 'en' ? `View All ${filtered.length} Products` : `عرض كل ${filtered.length} منتج`}
                   <ArrowUpRight className="w-4 h-4" />
