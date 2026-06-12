@@ -235,23 +235,51 @@ export function PhoneModel({ progressRef }: Props) {
       mbRef.current.rotation.z = ex * Math.cos(t * .42) * .1
     }
 
-    // Screen glow
-    const sg = getScreenGlow(p)
-    screenMat.emissiveIntensity = lerp(.35, 4.5, sg)
+    // Micro floating — only during the hold phase (parts fully exploded, 0.60–0.73).
+    // Each part oscillates at a unique irrational frequency: they never move in sync,
+    // creating the sensation of zero-gravity rather than a synchronized rig.
+    // Amplitude: ±0.010–0.014 units — imperceptible as animation, felt as life.
+    const floatAmt = p > 0.60 ? ex * (1 - easeOutExpo(mapRange(p, 0.73, 0.80, 0, 1))) : 0
+    if (floatAmt > 0.005) {
+      if (frontGlassRef.current) {
+        frontGlassRef.current.position.y += Math.sin(t * 0.53 + 0.3) * 0.011 * floatAmt
+        frontGlassRef.current.position.x += Math.cos(t * 0.37)       * 0.007 * floatAmt
+      }
+      if (rearGlassRef.current) {
+        rearGlassRef.current.position.y += Math.sin(t * 0.47 + 1.4) * 0.009 * floatAmt
+        rearGlassRef.current.position.x += Math.cos(t * 0.41 + 0.8) * 0.006 * floatAmt
+      }
+      if (islandRef.current) {
+        islandRef.current.position.y += Math.sin(t * 0.61 + 2.1) * 0.014 * floatAmt
+      }
+      if (btnPowerRef.current)   btnPowerRef.current.position.y   += Math.sin(t * 0.64 + 2.1) * 0.013 * floatAmt
+      if (btnVolUpRef.current)   btnVolUpRef.current.position.y   += Math.sin(t * 0.58 + 0.9) * 0.011 * floatAmt
+      if (btnVolDownRef.current) btnVolDownRef.current.position.y += Math.sin(t * 0.72 + 1.7) * 0.012 * floatAmt
+      if (btnSilentRef.current)  btnSilentRef.current.position.y  += Math.sin(t * 0.55 + 3.1) * 0.010 * floatAmt
+    }
+
+    // Screen glow — pulses with a living breath once fully revealed
+    // √3 frequency: irrational, never feels mechanical
+    const sg    = getScreenGlow(p)
+    const pulse = sg > 0.4 ? Math.sin(t * 1.732) * 0.10 * ((sg - 0.4) / 0.6) : 0
+    screenMat.emissiveIntensity = lerp(.35, 5.2, sg) * (1 + pulse)
     if (screenLightRef.current) {
-      screenLightRef.current.intensity = sg * 12
+      screenLightRef.current.intensity = sg * 18 * (1 + pulse * 0.5)
       screenLightRef.current.color.setHSL(lerp(0.62, 0.60, sg), 1, 0.6)
     }
 
-    // Phase 5 fade-out — only run when actually fading
+    // Screen reveal focus: non-screen elements subtly recede so the screen dominates.
+    // Perceptually this shifts attention without any visible "fade" — just focus.
+    const revealFocus = easeOutExpo(mapRange(p, 0.87, 0.94, 0, 1))
+    const focusDim    = lerp(1.0, 0.78, revealFocus)
+
     const op = getPhoneOpacity(p)
-    if (op < 0.999) {
-      titanium.opacity     = op
-      frontGlassMat.opacity = Math.min(0.22, 0.22 * op)
-      rearGlassMat.opacity  = op
-      screenMat.opacity     = op
+    if (op < 0.999 || revealFocus > 0) {
+      titanium.opacity      = op * focusDim
+      frontGlassMat.opacity = Math.min(0.22, 0.22 * op * focusDim)
+      rearGlassMat.opacity  = op * focusDim
+      screenMat.opacity     = op                 // screen always at full opacity
     } else {
-      // Reset to full opacity when not fading
       titanium.opacity      = 1
       frontGlassMat.opacity = 0.22
       rearGlassMat.opacity  = 1

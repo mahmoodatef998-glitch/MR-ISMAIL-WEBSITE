@@ -46,7 +46,7 @@ export function PhoneCanvas({ progressRef }: Props) {
         <Environment preset="studio" background={false} />
 
         <StudioLights progressRef={progressRef} />
-        <FloatingParticles />
+        <FloatingParticles progressRef={progressRef} />
         <PhoneModel progressRef={progressRef} />
         <ScreenWorld progressRef={progressRef} />
 

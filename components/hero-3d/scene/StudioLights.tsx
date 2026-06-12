@@ -12,8 +12,9 @@ export function StudioLights({ progressRef }: Props) {
   const rimRef         = useRef<THREE.SpotLight>(null)
   const screenFillRef  = useRef<THREE.PointLight>(null)
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     const p = progressRef.current
+    const t = clock.elapsedTime
 
     // Phase progress values — matched to unified phase map
     const tHold = mapRange(p, 0.44, 0.48, 0, 1)  // anticipation hold (inhale)
@@ -29,7 +30,9 @@ export function StudioLights({ progressRef }: Props) {
       if (t3    > 0) ki = lerp(117,  45, t3)      // dims during explosion
       if (t4    > 0) ki = lerp( 45, 165, t4)      // recovers during reassembly
       if (t5    > 0) ki = lerp(165, 230, t5)      // surges for final reveal
-      keyRef.current.intensity = ki
+      // Soft breathing at rest — silences as chaos takes over, absent during reveal
+      const breathe = Math.max(0, 1 - t3 * 4 - t5 * 3) * Math.sin(t * 0.41) * 5
+      keyRef.current.intensity = ki + breathe
     }
 
     // ── Rim light ────────────────────────────────────────────────────────────
@@ -57,15 +60,19 @@ export function StudioLights({ progressRef }: Props) {
         rimRef.current.color.setHSL(lerp(0.62, 0.10, t4), lerp(0.95, 0.78, t4), lerp(0.58, 0.58, t4))
         rimRef.current.intensity = lerp(140, 90, t4)
       } else {
-        // Phase 5: warm gold, dims as screen takes over
+        // Phase 5: rim fades almost to silence — screen becomes the sole source.
+        // This is the cinematic darkness before the screen light dominates.
         rimRef.current.color.setHSL(0.10, 0.78, 0.58)
-        rimRef.current.intensity = lerp(90, 50, t5)
+        rimRef.current.intensity = lerp(90, 6, t5)
       }
     }
 
     // ── Screen reveal fill ───────────────────────────────────────────────────
+    // Pulses at √3 Hz — same irrational frequency as the screen glow in PhoneModel,
+    // so both pulse in organic sync (non-mechanical, never perfectly aligned).
     if (screenFillRef.current) {
-      screenFillRef.current.intensity = lerp(0, 28, t5)
+      const pulse = t5 > 0.2 ? Math.sin(t * 1.732) * 2.5 * Math.min(t5, 1) : 0
+      screenFillRef.current.intensity = lerp(0, 46, t5) + pulse
     }
   })
 

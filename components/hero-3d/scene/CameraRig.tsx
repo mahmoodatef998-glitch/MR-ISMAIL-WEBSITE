@@ -41,13 +41,19 @@ export function CameraRig({ progressRef }: Props) {
       p < 0.87 ? lerp(0.12, 0.85, mapRange(p, 0.73, 0.87, 0, 1)) : // breathe returns
       lerp(0.85, 0.0, easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1)))    // silent for reveal
 
-    const breathe = (Math.sin(t * 0.85) * 0.007 + Math.cos(t * 0.65) * 0.005) * breatheAmt
+    // Three overlapping frequencies at irrational ratios → organic, biological feel
+    // No two cycles align, so it never repeats in a perceivable pattern
+    const breathe = (
+      Math.sin(t * 0.83)        * 0.007 +
+      Math.cos(t * 0.67)        * 0.004 +
+      Math.sin(t * 1.31 + 0.7)  * 0.002
+    ) * breatheAmt
 
     // ── Phase 1 (0 – 0.25): Luxury turntable ────────────────────────────────
     // Narrow, stately orbit. Feels like a product on a high-end display stand.
     if (p < 0.25) {
       const pp    = easeInOutSine(mapRange(p, 0, 0.25, 0, 1))
-      const angle = t * 0.13                          // slow, deliberate rotation
+      const angle = t * 0.13 + Math.sin(t * 0.071) * 0.038  // slight period drift → human, not mechanical
       const rad   = lerp(1.4, 0.4, pp)               // tightens as phase ends
 
       px  = Math.sin(angle) * rad
@@ -60,7 +66,7 @@ export function CameraRig({ progressRef }: Props) {
     // look monumental. Orbit motion fades to dead-still by 0.44.
     } else if (p < 0.44) {
       const pp    = easeInOutCubic(mapRange(p, 0.25, 0.44, 0, 1))
-      const angle = t * 0.13
+      const angle = t * 0.13 + Math.sin(t * 0.071) * 0.038
       const fade  = 1 - pp                           // orbit dissolves as we zoom
 
       px  = Math.sin(angle) * 0.4 * fade
@@ -120,27 +126,33 @@ export function CameraRig({ progressRef }: Props) {
       ly  = lerp(-0.10, 0, pp)
       fov = lerp(57, 42, pp)
 
-    // ── Phase 5 (0.87 – 1.00): Screen reveal ────────────────────────────────
-    // easeOutExpo: rushes toward the screen, then dramatically decelerates —
-    // creating the sensation of "arriving" at the screen rather than crashing.
-    // FOV narrows to 26° for intense telephoto compression at the end.
+    // ── Phase 5 (0.87 – 1.00): Screen reveal — entering a digital space ────────
+    // easeOutExpo rushes then decelerates to near-zero velocity at the end.
+    // The micro drift (sin/cos at low amplitude) creates the sensation of
+    // hovering in front of the screen — alive but perfectly still.
     } else {
       const pp = easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1))
 
-      px  = 0
-      py  = lerp(0, 0.22, pp) + breathe
+      // Imperceptible micro drift replaces breathe (which is ~0 here)
+      px  = Math.sin(t * 0.19) * 0.003 * pp
+      py  = lerp(0, 0.22, pp) + breathe + Math.cos(t * 0.23) * 0.002 * pp
       pz  = lerp(4.2, 1.85, pp)
       ly  = lerp(0, 0.18, pp)
-      fov = lerp(42, 26, pp)
+      fov = lerp(42, 24, pp)                         // 24° for deeper telephoto compression
     }
 
     targetPos.current.set(px, py, pz)
     targetLook.current.set(lx, ly, 0)
     targetFov.current = fov
 
-    // Frame-rate independent damping
-    const posSmooth = 1 - Math.pow(0.07, delta)
-    const fovSmooth = 1 - Math.pow(0.18, delta)
+    // Phase-adaptive damping (k in 1 - k^delta; larger k = slower convergence):
+    //   Explosion → k=0.015 (fast, kinetic — camera snaps with the impact)
+    //   Default   → k=0.07  (smooth tracking)
+    //   Reveal    → k=0.45  (ultra-slow floating — barely creeps toward target)
+    const decayPos  = p > 0.87 ? 0.45 : p > 0.48 && p < 0.60 ? 0.015 : 0.07
+    const decayFov  = p > 0.87 ? 0.65 : 0.18
+    const posSmooth = 1 - Math.pow(decayPos, delta)
+    const fovSmooth = 1 - Math.pow(decayFov, delta)
 
     camera.position.lerp(targetPos.current, posSmooth)
     currentLook.current.lerp(targetLook.current, posSmooth)
