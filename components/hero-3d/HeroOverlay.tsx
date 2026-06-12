@@ -9,11 +9,11 @@ function fade(p: number, start: number, end: number) {
 }
 
 export function HeroOverlay({ scrollProgress: p }: Props) {
-  // Phase opacities
-  const showPhase1   = 1 - fade(p, 0.12, 0.22)
-  const showPhase3   = fade(p, 0.38, 0.52) * (1 - fade(p, 0.66, 0.74))
-  const showPhase4   = fade(p, 0.72, 0.84) * (1 - fade(p, 0.86, 0.92))
-  const showPhase5   = easeOutExpo(mapRange(p, 0.90, 1.0, 0, 1))
+  // Phase opacities — matched to unified phase map
+  const showPhase1   = 1 - fade(p, 0.18, 0.28)                       // stays longer (slow orbit is the reveal)
+  const showPhase3   = fade(p, 0.50, 0.60) * (1 - fade(p, 0.68, 0.74)) // explosion → sweep window
+  const showPhase4   = fade(p, 0.73, 0.82) * (1 - fade(p, 0.83, 0.87)) // reassembly
+  const showPhase5   = easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1))     // screen reveal
   const showScroll   = 1 - fade(p, 0, 0.05)
 
   return (
@@ -110,8 +110,11 @@ export function HeroOverlay({ scrollProgress: p }: Props) {
       {/* ── Progress bar ─────────────────────────────────────────────────── */}
       <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 items-center">
         {['01', '02', '03', '04', '05'].map((n, i) => {
-          const sectionProgress = i / 4
-          const isActive = p >= sectionProgress - 0.05 && p < sectionProgress + 0.25
+          // Section marks aligned to unified phase map
+          const marks = [0, 0.25, 0.48, 0.73, 0.87]
+          const sectionProgress = marks[i]
+          const nextMark = marks[i + 1] ?? 1.0
+          const isActive = p >= sectionProgress && p < nextMark
           return (
             <div key={n} className="flex items-center gap-2">
               <span className={`text-[9px] font-bold transition-colors duration-300 ${isActive ? 'text-[#c8a96e]' : 'text-gray-700'}`}>

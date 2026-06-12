@@ -71,7 +71,7 @@ export function Hero3D() {
           trigger: containerRef.current,
           start: 'top top',
           end:   'bottom bottom',
-          scrub: 1,
+          scrub: 1.2,
         },
       }).to(proxy, { progress: 1, ease: 'none', duration: 1 })
 
@@ -118,7 +118,7 @@ export function Hero3D() {
   }, [])
 
   return (
-    <div id="home" ref={containerRef} className="relative" style={{ height: '600vh' }}>
+    <div id="home" ref={containerRef} className="relative" style={{ height: '750vh' }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#000005]">
         <div className="absolute inset-0">
           <PhoneCanvas progressRef={progressRef} />

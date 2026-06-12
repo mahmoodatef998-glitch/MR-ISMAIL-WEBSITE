@@ -4,7 +4,7 @@ import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
-import { mapRange, lerp, easeInOutCubic, easeOutExpo } from '../utils'
+import { mapRange, lerp, easeOutExpo } from '../utils'
 
 // ─── Phone Dimensions ────────────────────────────────────────────────────────
 const W  = 0.77
@@ -14,26 +14,32 @@ const CR = 0.056
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-// Stagger offsets per part — front layers explode first, internals follow
+// Stagger offsets — tightened to fit the sharper 0.48–0.60 explosion window.
+// Front layers lead, internals follow, rear glass is last.
+// Max stagger 0.024 keeps the whole cascade within the window.
 const STAGGER = {
   frontGlass: 0,
-  island:     0.010,
-  screen:     0.018,
-  camModule:  0.024,
-  mb:         0.032,
-  battery:    0.040,
-  btnPower:   0.044,
-  btnVolUp:   0.046,
-  btnVolDown: 0.049,
-  btnSilent:  0.052,
-  rearGlass:  0.060,
+  island:     0.004,
+  screen:     0.008,
+  camModule:  0.012,
+  mb:         0.016,
+  battery:    0.018,
+  btnPower:   0.020,
+  btnVolUp:   0.021,
+  btnVolDown: 0.022,
+  btnSilent:  0.023,
+  rearGlass:  0.024,
 } as const
 
 function getExplode(p: number): number {
-  if (p < 0.20) return 0
-  if (p < 0.50) return easeInOutCubic(mapRange(p, 0.20, 0.50, 0, 1))
-  if (p < 0.72) return 1
-  if (p < 0.90) return 1 - easeInOutCubic(mapRange(p, 0.72, 0.90, 0, 1))
+  // Matches unified phase map:
+  //   0.48–0.60  explosion (easeOutExpo: snaps immediately, decelerates)
+  //   0.60–0.73  hold while camera sweeps
+  //   0.73–0.87  reassembly (easeInExpo: slow start then rushes home)
+  if (p < 0.48) return 0
+  if (p < 0.60) return easeOutExpo(mapRange(p, 0.48, 0.60, 0, 1))
+  if (p < 0.73) return 1
+  if (p < 0.87) return 1 - (Math.pow(2, 10 * mapRange(p, 0.73, 0.87, 0, 1) - 10))
   return 0
 }
 
@@ -42,12 +48,12 @@ function getExplodeStaggered(p: number, stagger: number): number {
 }
 
 function getScreenGlow(p: number): number {
-  return easeOutExpo(mapRange(p, 0.88, 1.0, 0, 1))
+  return easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1))
 }
 
 function getPhoneOpacity(p: number): number {
-  if (p < 0.92) return 1
-  return 1 - mapRange(p, 0.92, 0.98, 0, 1)
+  if (p < 0.91) return 1
+  return 1 - mapRange(p, 0.91, 0.98, 0, 1)
 }
 
 function buildScreenTexture(): THREE.CanvasTexture {
@@ -188,7 +194,7 @@ export function PhoneModel({ progressRef }: Props) {
     if (!rootRef.current) return
 
     // Gentle sway — fades during explosion and near the screen close-up
-    const phase5Damp = 1 - easeOutExpo(mapRange(p, 0.88, 1.0, 0, 1))
+    const phase5Damp = 1 - easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1))
     const swayScale  = (1 - ex) * phase5Damp
     rootRef.current.rotation.y = Math.sin(t * 0.18) * 0.08 * swayScale
     rootRef.current.position.y = Math.sin(t * 0.48) * 0.042 * swayScale

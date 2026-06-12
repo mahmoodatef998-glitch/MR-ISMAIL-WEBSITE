@@ -13,52 +13,57 @@ export function StudioLights({ progressRef }: Props) {
   const screenFillRef  = useRef<THREE.PointLight>(null)
 
   useFrame(() => {
-    const p  = progressRef.current
+    const p = progressRef.current
 
-    // Phase progress values (all clamped 0-1 by mapRange's internal clamp)
-    const t3 = mapRange(p, 0.40, 0.70, 0, 1)  // explosion sweep
-    const t4 = mapRange(p, 0.70, 0.90, 0, 1)  // reassembly
-    const t5 = mapRange(p, 0.90, 1.00, 0, 1)  // screen reveal
+    // Phase progress values — matched to unified phase map
+    const tHold = mapRange(p, 0.44, 0.48, 0, 1)  // anticipation hold (inhale)
+    const t3    = mapRange(p, 0.48, 0.73, 0, 1)  // explosion + sweep
+    const t4    = mapRange(p, 0.73, 0.87, 0, 1)  // reassembly
+    const t5    = mapRange(p, 0.87, 1.00, 0, 1)  // screen reveal
 
     // ── Key light ────────────────────────────────────────────────────────────
-    // Dims as the phone explodes (dramatic), recovers + surges for the reveal
+    // Hold: dims 10% (scene exhales), explosion: slashes down, reveal: surges
     if (keyRef.current) {
       let ki = 130
-      if (t3 > 0) ki = lerp(130, 45, t3)        // dims during explosion
-      if (t4 > 0) ki = lerp(45, 165, t4)         // recovers during reassembly
-      if (t5 > 0) ki = lerp(165, 230, t5)        // surges for final reveal
+      if (tHold > 0) ki = lerp(130, 117, tHold)  // subtle dim — the inhale
+      if (t3    > 0) ki = lerp(117,  45, t3)      // dims during explosion
+      if (t4    > 0) ki = lerp( 45, 165, t4)      // recovers during reassembly
+      if (t5    > 0) ki = lerp(165, 230, t5)      // surges for final reveal
       keyRef.current.intensity = ki
     }
 
     // ── Rim light ────────────────────────────────────────────────────────────
-    // Violet base → electric blue (explosion) → warm gold (reassembly) → dim (reveal)
+    // Hold: brightens slightly (tension building), then electric blue at explosion
     if (rimRef.current) {
-      if (t3 <= 0) {
+      if (t3 <= 0 && tHold <= 0) {
         // Phases 1–2: signature violet
         rimRef.current.color.setHSL(0.77, 0.88, 0.54)
         rimRef.current.intensity = 85
+      } else if (t3 <= 0) {
+        // Anticipation hold: violet brightens — tension
+        rimRef.current.color.setHSL(lerp(0.77, 0.72, tHold), 0.90, lerp(0.54, 0.62, tHold))
+        rimRef.current.intensity = lerp(85, 105, tHold)
       } else if (t3 < 0.5) {
         // Phase 3 first half: violet → electric blue
         const f = t3 * 2
-        rimRef.current.color.setHSL(lerp(0.77, 0.62, f), lerp(0.88, 0.95, f), 0.56)
-        rimRef.current.intensity = lerp(85, 140, f)
+        rimRef.current.color.setHSL(lerp(0.72, 0.62, f), lerp(0.90, 0.95, f), 0.58)
+        rimRef.current.intensity = lerp(105, 140, f)
       } else if (t3 < 1) {
         // Phase 3 second half: hold electric blue at full intensity
-        rimRef.current.color.setHSL(0.62, 0.95, 0.56)
+        rimRef.current.color.setHSL(0.62, 0.95, 0.58)
         rimRef.current.intensity = 140
       } else if (t4 > 0) {
         // Phase 4 reassembly: blue → warm gold (brand color)
-        rimRef.current.color.setHSL(lerp(0.62, 0.10, t4), lerp(0.95, 0.78, t4), lerp(0.56, 0.58, t4))
+        rimRef.current.color.setHSL(lerp(0.62, 0.10, t4), lerp(0.95, 0.78, t4), lerp(0.58, 0.58, t4))
         rimRef.current.intensity = lerp(140, 90, t4)
       } else {
-        // Phase 5: warm gold, slightly dims as screen takes over
+        // Phase 5: warm gold, dims as screen takes over
         rimRef.current.color.setHSL(0.10, 0.78, 0.58)
         rimRef.current.intensity = lerp(90, 50, t5)
       }
     }
 
     // ── Screen reveal fill ───────────────────────────────────────────────────
-    // Front point light activates in phase 5 to simulate the screen lighting the face
     if (screenFillRef.current) {
       screenFillRef.current.intensity = lerp(0, 28, t5)
     }
