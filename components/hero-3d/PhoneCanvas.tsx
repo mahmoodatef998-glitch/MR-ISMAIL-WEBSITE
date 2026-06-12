@@ -4,16 +4,16 @@ import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor } from '@react-three/drei'
 import * as THREE from 'three'
-import { PhoneModel }       from './scene/PhoneModel'
-import { CameraRig }        from './scene/CameraRig'
-import { StudioLights }     from './scene/StudioLights'
+import { PhoneModel }        from './scene/PhoneModel'
+import { CameraRig }         from './scene/CameraRig'
+import { StudioLights }      from './scene/StudioLights'
 import { FloatingParticles } from './scene/FloatingParticles'
-import { PostFX }           from './scene/PostFX'
-import { ScreenWorld }      from './scene/ScreenWorld'
+import { PostFX }            from './scene/PostFX'
+import { ScreenWorld }       from './scene/ScreenWorld'
 
-interface Props { scrollProgress: number }
+interface Props { progressRef: React.MutableRefObject<number> }
 
-export function PhoneCanvas({ scrollProgress }: Props) {
+export function PhoneCanvas({ progressRef }: Props) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 45, near: 0.1, far: 100 }}
@@ -34,23 +34,21 @@ export function PhoneCanvas({ scrollProgress }: Props) {
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
 
-      <PerformanceMonitor
-        onDecline={() => {/* could lower quality here */}}
-      />
+      <PerformanceMonitor onDecline={() => {}} />
 
       <Suspense fallback={null}>
         <Environment preset="city" />
 
         <StudioLights />
         <FloatingParticles />
-        <PhoneModel scrollProgress={scrollProgress} />
-        <ScreenWorld scrollProgress={scrollProgress} />
+        <PhoneModel progressRef={progressRef} />
+        <ScreenWorld progressRef={progressRef} />
 
         <PostFX />
       </Suspense>
 
-      {/* Camera rig is outside Suspense so it always runs */}
-      <CameraRig scrollProgress={scrollProgress} />
+      {/* CameraRig outside Suspense so it always runs */}
+      <CameraRig progressRef={progressRef} />
     </Canvas>
   )
 }
