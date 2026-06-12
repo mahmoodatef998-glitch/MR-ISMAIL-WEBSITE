@@ -1,21 +1,44 @@
-import { Hero } from '@/components/home/hero'
-import { Categories } from '@/components/home/categories'
-import { WhyChooseUs } from '@/components/home/why-choose-us'
-import { FeaturedProducts } from '@/components/home/featured-products'
-import { CTASection } from '@/components/home/cta-section'
-import { TrustBadges } from '@/components/home/trust-badges'
+import { HeroSection } from '@/components/sections/hero-section'
+import { ProductsSection } from '@/components/sections/products-section'
+import { FeaturesSection } from '@/components/sections/features-section'
+import { AboutSection } from '@/components/sections/about-section'
+import { ProcessSection } from '@/components/sections/process-section'
+import { ContactSection } from '@/components/sections/contact-section'
+import { prisma } from '@/lib/db'
+import { Product, ProductSpec } from '@/types'
+import { parseJsonSafe } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-export default function HomePage() {
+async function getProducts(): Promise<Product[]> {
+  try {
+    const rows = await prisma.product.findMany({
+      where: { status: 'active' },
+      orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+      take: 30,
+    })
+    return rows.map((p) => ({
+      ...p,
+      specs: parseJsonSafe<ProductSpec[]>(p.specs, []),
+      images: parseJsonSafe<string[]>(p.images, []),
+      status: p.status as Product['status'],
+    }))
+  } catch {
+    return []
+  }
+}
+
+export default async function HomePage() {
+  const products = await getProducts()
+
   return (
     <>
-      <Hero />
-      <Categories />
-      <WhyChooseUs />
-      <FeaturedProducts />
-      <TrustBadges />
-      <CTASection />
+      <HeroSection />
+      <ProductsSection products={products} />
+      <FeaturesSection />
+      <AboutSection />
+      <ProcessSection />
+      <ContactSection />
     </>
   )
 }
