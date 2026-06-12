@@ -139,17 +139,21 @@ export function PhoneModel({ progressRef }: Props) {
   }, [])
 
   const POS = useMemo(() => ({
-    frontGlass: { r: new THREE.Vector3(0, 0, D/2+.002),       e: new THREE.Vector3(0, 0, 2.8)  },
-    screen:     { r: new THREE.Vector3(0, 0, D/2-.006),       e: new THREE.Vector3(0, 0, 2.0)  },
-    rearGlass:  { r: new THREE.Vector3(0, 0, -D/2-.002),      e: new THREE.Vector3(0, 0, -2.8) },
-    camModule:  { r: new THREE.Vector3(-.16, .61, -D/2-.014), e: new THREE.Vector3(-1.6, 2.6, 1.0) },
-    battery:    { r: new THREE.Vector3(.04, -.30, 0),          e: new THREE.Vector3(2.6, -.5, .4)  },
-    mb:         { r: new THREE.Vector3(0, .30, 0),             e: new THREE.Vector3(-2.6, .5, .4)  },
-    btnPower:   { r: new THREE.Vector3(W/2+.006, .15, 0),     e: new THREE.Vector3(3.4, .15, 0)   },
-    btnVolUp:   { r: new THREE.Vector3(-W/2-.006, .28, 0),    e: new THREE.Vector3(-3.4, .28, 0)  },
-    btnVolDown: { r: new THREE.Vector3(-W/2-.006, .05, 0),    e: new THREE.Vector3(-3.4, .05, 0)  },
-    btnSilent:  { r: new THREE.Vector3(-W/2-.006, .50, 0),    e: new THREE.Vector3(-3.4, .50, 0)  },
-    island:     { r: new THREE.Vector3(0, H/2-.11, D/2+.004), e: new THREE.Vector3(0, 3.2, 1.4)  },
+    // Rest positions (assembled) → Exploded positions
+    // Exploded: heavier Z-depth spread makes the explosion feel truly 3D.
+    // Front layers fly toward camera (+Z), rear layers recede (-Z),
+    // internals scatter laterally with Z variation for parallax.
+    frontGlass: { r: new THREE.Vector3(0, 0, D/2+.002),       e: new THREE.Vector3(0,      0,     4.2)  },
+    screen:     { r: new THREE.Vector3(0, 0, D/2-.006),       e: new THREE.Vector3(0.15,   0.1,   3.2)  },
+    rearGlass:  { r: new THREE.Vector3(0, 0, -D/2-.002),      e: new THREE.Vector3(0,      0,    -4.2)  },
+    camModule:  { r: new THREE.Vector3(-.16, .61, -D/2-.014), e: new THREE.Vector3(-2.4,   3.8,   2.0)  },
+    battery:    { r: new THREE.Vector3(.04, -.30, 0),          e: new THREE.Vector3( 3.6,  -1.2,   1.0)  },
+    mb:         { r: new THREE.Vector3(0, .30, 0),             e: new THREE.Vector3(-3.6,   1.2,   0.8)  },
+    btnPower:   { r: new THREE.Vector3(W/2+.006, .15, 0),     e: new THREE.Vector3( 4.6,   0.15,  0.2)  },
+    btnVolUp:   { r: new THREE.Vector3(-W/2-.006, .28, 0),    e: new THREE.Vector3(-4.6,   0.28,  0.2)  },
+    btnVolDown: { r: new THREE.Vector3(-W/2-.006, .05, 0),    e: new THREE.Vector3(-4.6,   0.05,  0.2)  },
+    btnSilent:  { r: new THREE.Vector3(-W/2-.006, .50, 0),    e: new THREE.Vector3(-4.6,   0.50,  0.2)  },
+    island:     { r: new THREE.Vector3(0, H/2-.11, D/2+.004), e: new THREE.Vector3(0,      4.6,   2.4)  },
   }), [])
 
   useFrame(({ clock }) => {
@@ -161,9 +165,11 @@ export function PhoneModel({ progressRef }: Props) {
 
     if (!rootRef.current) return
 
-    // Gentle sway only — no time-based orbit (camera handles the cinematic orbit)
-    rootRef.current.rotation.y = Math.sin(t * 0.18) * 0.08 * (1 - ex)
-    rootRef.current.position.y = Math.sin(t * 0.48) * 0.042 * (1 - ex)
+    // Gentle sway — fades during explosion and near the screen close-up
+    const phase5Damp = 1 - easeOutExpo(mapRange(p, 0.88, 1.0, 0, 1))
+    const swayScale  = (1 - ex) * phase5Damp
+    rootRef.current.rotation.y = Math.sin(t * 0.18) * 0.08 * swayScale
+    rootRef.current.position.y = Math.sin(t * 0.48) * 0.042 * swayScale
 
     // Helper: lerp a part to its exploded/rest position using its own stagger
     const lp = (

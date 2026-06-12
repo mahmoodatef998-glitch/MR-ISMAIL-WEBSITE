@@ -23,67 +23,98 @@ const PhoneCanvas = dynamic(
 
 export function Hero3D() {
   const containerRef = useRef<HTMLDivElement>(null)
-  // Raw ref for canvas — updated every scroll tick with zero React overhead
+  // Canvas reads this every useFrame — never triggers React re-render
   const progressRef  = useRef(0)
-  // Throttled state for HTML overlay only (~30fps)
+  // Throttled (~30fps) for HTML overlay only
   const [overlayProgress, setOverlayProgress] = useState(0)
-  // Direct DOM ref for flash — no state needed
+  // Flash overlay — direct DOM mutation, zero React overhead
   const flashRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    let lenis: import('lenis').default | null = null
-    let st: import('gsap/ScrollTrigger').ScrollTrigger | null = null
-    let lastOverlayUpdate = 0
+    let destroyed  = false
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let lenisInst: any = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let gsapInst:  any = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let tl:        any = null
+    let lenisRaf:  ((t: number) => void) | null = null
+    let tickFn:    (() => void) | null = null
 
     async function init() {
-      const Lenis        = (await import('lenis')).default
-      const gsap         = (await import('gsap')).default
+      const Lenis             = (await import('lenis')).default
+      const gsap              = (await import('gsap')).default
       const { ScrollTrigger } = await import('gsap/ScrollTrigger')
+      if (destroyed) return
+
+      gsapInst = gsap
       gsap.registerPlugin(ScrollTrigger)
 
-      lenis = new Lenis({
+      // Lenis — smooth scroll physics
+      lenisInst = new Lenis({
         duration: 1.4,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
       })
-
-      lenis.on('scroll', ScrollTrigger.update)
-      gsap.ticker.add((time: number) => { lenis!.raf(time * 1000) })
+      lenisRaf = (time: number) => { lenisInst.raf(time * 1000) }
+      lenisInst.on('scroll', ScrollTrigger.update)
+      gsap.ticker.add(lenisRaf)
       gsap.ticker.lagSmoothing(0)
 
-      st = ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: (self) => {
-          const p = self.progress
+      // GSAP proxy: scrollTrigger scrub smoothly animates this 0 → 1.
+      // scrub:1 = 1-second cinema lag — eliminates jitter from fast scroll.
+      const proxy = { progress: 0 }
+      let   lastOverlayUpdate = 0
 
-          // Canvas always gets the latest value — no React re-render
-          progressRef.current = p
-
-          // Flash: direct DOM mutation — zero React overhead
-          if (flashRef.current) {
-            if (p > 0.93 && p < 0.97) {
-              const intensity = Math.sin(((p - 0.93) / 0.04) * Math.PI) * 0.7
-              flashRef.current.style.background = `rgba(40,60,255,${(intensity * 0.4).toFixed(3)})`
-              flashRef.current.style.display = 'block'
-            } else {
-              flashRef.current.style.display = 'none'
-            }
-          }
-
-          // Throttle HTML overlay updates to ~30fps
-          const now = performance.now()
-          if (now - lastOverlayUpdate > 33) {
-            lastOverlayUpdate = now
-            setOverlayProgress(p)
-          }
+      tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end:   'bottom bottom',
+          scrub: 1,
         },
-      })
+      }).to(proxy, { progress: 1, ease: 'none', duration: 1 })
+
+      // Push smoothed value to canvas ref every GSAP tick (after proxy updates)
+      tickFn = () => {
+        const p = proxy.progress
+        progressRef.current = p
+
+        // Flash — direct DOM, no useState
+        if (flashRef.current) {
+          if (p > 0.93 && p < 0.97) {
+            const t = (p - 0.93) / 0.04
+            const intensity = Math.sin(t * Math.PI) * 0.7
+            flashRef.current.style.background =
+              `rgba(40,60,255,${(intensity * 0.4).toFixed(3)})`
+            flashRef.current.style.display = 'block'
+          } else {
+            flashRef.current.style.display = 'none'
+          }
+        }
+
+        // Throttle React state to ~30fps for the HTML overlay
+        const now = performance.now()
+        if (now - lastOverlayUpdate > 33) {
+          lastOverlayUpdate = now
+          setOverlayProgress(p)
+        }
+      }
+      gsap.ticker.add(tickFn)
     }
 
     init()
-    return () => { lenis?.destroy(); st?.kill() }
+
+    return () => {
+      destroyed = true
+      lenisInst?.destroy()
+      if (gsapInst) {
+        if (lenisRaf) gsapInst.ticker.remove(lenisRaf)
+        if (tickFn)   gsapInst.ticker.remove(tickFn)
+      }
+      tl?.scrollTrigger?.kill()
+      tl?.kill()
+    }
   }, [])
 
   return (
@@ -95,7 +126,7 @@ export function Hero3D() {
 
         <HeroOverlay scrollProgress={overlayProgress} />
 
-        {/* Flash overlay: direct DOM, no React state */}
+        {/* Flash: direct DOM, no React state */}
         <div
           ref={flashRef}
           className="absolute inset-0 z-20 pointer-events-none"
