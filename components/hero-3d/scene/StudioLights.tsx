@@ -1,39 +1,116 @@
 'use client'
 
-export function StudioLights() {
+import { useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
+import { mapRange, lerp } from '../utils'
+
+interface Props { progressRef: React.MutableRefObject<number> }
+
+export function StudioLights({ progressRef }: Props) {
+  const keyRef         = useRef<THREE.SpotLight>(null)
+  const rimRef         = useRef<THREE.SpotLight>(null)
+  const screenFillRef  = useRef<THREE.PointLight>(null)
+
+  useFrame(() => {
+    const p  = progressRef.current
+
+    // Phase progress values (all clamped 0-1 by mapRange's internal clamp)
+    const t3 = mapRange(p, 0.40, 0.70, 0, 1)  // explosion sweep
+    const t4 = mapRange(p, 0.70, 0.90, 0, 1)  // reassembly
+    const t5 = mapRange(p, 0.90, 1.00, 0, 1)  // screen reveal
+
+    // ── Key light ────────────────────────────────────────────────────────────
+    // Dims as the phone explodes (dramatic), recovers + surges for the reveal
+    if (keyRef.current) {
+      let ki = 130
+      if (t3 > 0) ki = lerp(130, 45, t3)        // dims during explosion
+      if (t4 > 0) ki = lerp(45, 165, t4)         // recovers during reassembly
+      if (t5 > 0) ki = lerp(165, 230, t5)        // surges for final reveal
+      keyRef.current.intensity = ki
+    }
+
+    // ── Rim light ────────────────────────────────────────────────────────────
+    // Violet base → electric blue (explosion) → warm gold (reassembly) → dim (reveal)
+    if (rimRef.current) {
+      if (t3 <= 0) {
+        // Phases 1–2: signature violet
+        rimRef.current.color.setHSL(0.77, 0.88, 0.54)
+        rimRef.current.intensity = 85
+      } else if (t3 < 0.5) {
+        // Phase 3 first half: violet → electric blue
+        const f = t3 * 2
+        rimRef.current.color.setHSL(lerp(0.77, 0.62, f), lerp(0.88, 0.95, f), 0.56)
+        rimRef.current.intensity = lerp(85, 140, f)
+      } else if (t3 < 1) {
+        // Phase 3 second half: hold electric blue at full intensity
+        rimRef.current.color.setHSL(0.62, 0.95, 0.56)
+        rimRef.current.intensity = 140
+      } else if (t4 > 0) {
+        // Phase 4 reassembly: blue → warm gold (brand color)
+        rimRef.current.color.setHSL(lerp(0.62, 0.10, t4), lerp(0.95, 0.78, t4), lerp(0.56, 0.58, t4))
+        rimRef.current.intensity = lerp(140, 90, t4)
+      } else {
+        // Phase 5: warm gold, slightly dims as screen takes over
+        rimRef.current.color.setHSL(0.10, 0.78, 0.58)
+        rimRef.current.intensity = lerp(90, 50, t5)
+      }
+    }
+
+    // ── Screen reveal fill ───────────────────────────────────────────────────
+    // Front point light activates in phase 5 to simulate the screen lighting the face
+    if (screenFillRef.current) {
+      screenFillRef.current.intensity = lerp(0, 28, t5)
+    }
+  })
+
   return (
     <>
-      <ambientLight intensity={0.12} color="#1a1a44" />
+      {/* Near-black ambient with deep indigo tint — prevents pitch-black undersides */}
+      <ambientLight intensity={0.06} color="#0a0f22" />
 
-      {/* Key light — warm white, top-left-front */}
+      {/* Key — warm white, top-left-front (primary source) */}
       <spotLight
-        position={[-5, 9, 6]}
-        intensity={120}
-        color="#ffe8cc"
-        angle={0.32}
-        penumbra={0.6}
+        ref={keyRef}
+        position={[-4.5, 8.5, 5.5]}
+        intensity={130}
+        color="#fff2e4"
+        angle={0.26}
+        penumbra={0.80}
         castShadow
         shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0001}
+        shadow-bias={-0.0002}
+        shadow-normalBias={0.04}
       />
 
-      {/* Fill — cool electric blue, right */}
-      <pointLight position={[6, 3, 3]} intensity={30} color="#3366ff" />
-
-      {/* Rim / hair light — violet, back */}
+      {/* Rim — violet, directly back-top (edge separation / hair light) */}
       <spotLight
-        position={[0.5, 5, -7]}
-        intensity={90}
-        color="#aa44ff"
-        angle={0.45}
-        penumbra={0.9}
+        ref={rimRef}
+        position={[0.5, 6.5, -9]}
+        intensity={85}
+        color="#9933ff"
+        angle={0.38}
+        penumbra={1.0}
       />
 
-      {/* Gold accent — bottom-right */}
-      <pointLight position={[3, -3, 3]} intensity={20} color="#c8a96e" />
+      {/* Fill — cool electric blue, right side (studio bounce) */}
+      <pointLight position={[5.5, 2.5, 2.5]} intensity={20} color="#3355ff" distance={14} decay={2} />
 
-      {/* Ground bounce */}
-      <pointLight position={[0, -6, 2]} intensity={6} color="#0a1a33" />
+      {/* Gold accent — low front-right (brand warm fill) */}
+      <pointLight position={[2.0, -2.5, 3.5]} intensity={14} color="#c8a96e" distance={9} decay={2} />
+
+      {/* Ground bounce — barely visible cool tone */}
+      <pointLight position={[0, -6, 1.5]} intensity={4} color="#101830" distance={12} decay={2} />
+
+      {/* Screen reveal helper — activates in phase 5 */}
+      <pointLight
+        ref={screenFillRef}
+        position={[0, 0.1, 2.4]}
+        intensity={0}
+        color="#4466ff"
+        distance={6}
+        decay={2}
+      />
     </>
   )
 }

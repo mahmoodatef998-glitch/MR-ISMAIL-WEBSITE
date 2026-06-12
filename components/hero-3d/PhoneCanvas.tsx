@@ -2,7 +2,13 @@
 
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Environment, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor } from '@react-three/drei'
+import {
+  Environment,
+  AdaptiveDpr,
+  AdaptiveEvents,
+  PerformanceMonitor,
+  ContactShadows,
+} from '@react-three/drei'
 import * as THREE from 'three'
 import { PhoneModel }        from './scene/PhoneModel'
 import { CameraRig }         from './scene/CameraRig'
@@ -20,29 +26,40 @@ export function PhoneCanvas({ progressRef }: Props) {
       dpr={[1, 2]}
       shadows
       gl={{
-        antialias: true,
-        alpha: false,
-        powerPreference: 'high-performance',
-        toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.6,
+        antialias:          true,
+        alpha:              false,
+        powerPreference:    'high-performance',
+        toneMapping:        THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.5,
       }}
       className="!bg-transparent"
     >
       <color attach="background" args={['#000005']} />
-      <fog attach="fog" args={['#000005', 12, 35]} />
+      <fog attach="fog" args={['#020510', 14, 40]} />
 
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
-
       <PerformanceMonitor onDecline={() => {}} />
 
       <Suspense fallback={null}>
-        <Environment preset="city" />
+        {/* Studio preset: clean white/gray reflections — ideal for metallic product renders */}
+        <Environment preset="studio" background={false} />
 
-        <StudioLights />
+        <StudioLights progressRef={progressRef} />
         <FloatingParticles />
         <PhoneModel progressRef={progressRef} />
         <ScreenWorld progressRef={progressRef} />
+
+        {/* Soft ground shadow — Apple-style product photography look */}
+        <ContactShadows
+          position={[0, -0.90, 0]}
+          opacity={0.38}
+          width={2.8}
+          height={2.8}
+          blur={2.8}
+          far={1.4}
+          color="#020510"
+        />
 
         <PostFX />
       </Suspense>

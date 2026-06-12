@@ -112,20 +112,42 @@ export function PhoneModel({ progressRef }: Props) {
   const islandRef      = useRef<THREE.Group>(null)
   const screenLightRef = useRef<THREE.PointLight>(null)
 
-  // Pre-init with transparent:true so we never touch it per-frame
+  // Materials: pre-init transparent so we never toggle it per-frame.
+  // clearcoat adds the double-layer sheen seen on real titanium phones and ceramic glass.
   const titanium = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#232332', metalness: 0.96, roughness: 0.04,
-    envMapIntensity: 3, transparent: true, opacity: 1,
+    color: '#1e1e2e',
+    metalness: 0.96,
+    roughness: 0.035,
+    envMapIntensity: 4.0,
+    clearcoat: 0.14,          // subtle titanium sheen
+    clearcoatRoughness: 0.08,
+    transparent: true,
+    opacity: 1,
   }), [])
 
   const frontGlassMat = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#ffffff', transmission: 0.94, roughness: 0, metalness: 0.08,
-    ior: 1.5, thickness: 0.5, transparent: true, opacity: 0.22, envMapIntensity: 2,
+    color: '#ffffff',
+    transmission: 0.94,
+    roughness: 0,
+    metalness: 0.06,
+    ior: 1.52,
+    thickness: 0.5,
+    transparent: true,
+    opacity: 0.22,
+    envMapIntensity: 4.0,
+    clearcoat: 1.0,           // ceramic shield glass: perfect coating
+    clearcoatRoughness: 0.0,  // mirror-smooth
   }), [])
 
   const rearGlassMat = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#0a0a18', metalness: 0.18, roughness: 0.035,
-    transparent: true, opacity: 1, envMapIntensity: 3,
+    color: '#070718',
+    metalness: 0.20,
+    roughness: 0.022,
+    transparent: true,
+    opacity: 1,
+    envMapIntensity: 4.0,
+    clearcoat: 0.40,          // rear ceramic/glass has strong coating
+    clearcoatRoughness: 0.02,
   }), [])
 
   const screenMat = useMemo(() => {

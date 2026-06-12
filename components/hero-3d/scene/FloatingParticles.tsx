@@ -4,58 +4,137 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const COUNT = 1800
+// Box-Muller for gaussian-distributed particle density (denser near centre)
+function gaussian() {
+  let u = 0, v = 0
+  while (u === 0) u = Math.random()
+  while (v === 0) v = Math.random()
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v)
+}
 
-export function FloatingParticles() {
+// ── Fine dust — tight cluster around phone ────────────────────────────────────
+// Simulates lit studio dust — the particles closest to the phone.
+function DustParticles() {
   const ref = useRef<THREE.Points>(null)
 
-  const { positions, colors } = useMemo(() => {
-    const positions = new Float32Array(COUNT * 3)
-    const colors = new Float32Array(COUNT * 3)
+  const { pos, col } = useMemo(() => {
+    const COUNT = 1100
+    const pos = new Float32Array(COUNT * 3)
+    const col = new Float32Array(COUNT * 3)
 
     for (let i = 0; i < COUNT; i++) {
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      const r = 2.8 + Math.random() * 6
+      // Gaussian cluster centred on phone, σ ≈ 2 units
+      pos[i * 3]     = gaussian() * 2.2
+      pos[i * 3 + 1] = gaussian() * 1.8
+      pos[i * 3 + 2] = gaussian() * 1.8 - 0.5  // slight bias backward
 
-      positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta)
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 8
-      positions[i * 3 + 2] = r * Math.cos(phi)
-
-      const gold = Math.random() > 0.65
-      if (gold) {
-        colors[i * 3] = 0.78; colors[i * 3 + 1] = 0.66; colors[i * 3 + 2] = 0.43
+      const rnd = Math.random()
+      if (rnd < 0.62) {
+        // Gold — brand colour
+        col[i * 3]     = 0.76 + Math.random() * 0.14
+        col[i * 3 + 1] = 0.62 + Math.random() * 0.10
+        col[i * 3 + 2] = 0.38 + Math.random() * 0.10
+      } else if (rnd < 0.82) {
+        // Warm white
+        const w = 0.70 + Math.random() * 0.30
+        col[i * 3] = w; col[i * 3 + 1] = w; col[i * 3 + 2] = w * 0.9
       } else {
-        const b = 0.1 + Math.random() * 0.25
-        colors[i * 3] = b * 0.4; colors[i * 3 + 1] = b * 0.5; colors[i * 3 + 2] = b
+        // Electric blue accent
+        col[i * 3]     = 0.20 + Math.random() * 0.15
+        col[i * 3 + 1] = 0.42 + Math.random() * 0.20
+        col[i * 3 + 2] = 1.0
       }
     }
-
-    return { positions, colors }
+    return { pos, col }
   }, [])
 
   useFrame(({ clock }) => {
     if (!ref.current) return
     const t = clock.elapsedTime
-    ref.current.rotation.y = t * 0.014
-    ref.current.rotation.x = Math.sin(t * 0.007) * 0.08
+    // Slow tumble — gives the impression of particles drifting
+    ref.current.rotation.y = t * 0.016
+    ref.current.rotation.x = Math.sin(t * 0.009) * 0.10
+    ref.current.rotation.z = Math.cos(t * 0.007) * 0.04
   })
 
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        <bufferAttribute attach="attributes-color"    args={[colors, 3]} />
+        <bufferAttribute attach="attributes-position" args={[pos, 3]} />
+        <bufferAttribute attach="attributes-color"    args={[col, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.013}
+        size={0.016}
         vertexColors
         transparent
-        opacity={0.55}
+        opacity={0.58}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
     </points>
+  )
+}
+
+// ── Bokeh layer — far background ──────────────────────────────────────────────
+// Large, very dim circles that simulate out-of-focus light sources behind the scene.
+// They are intentionally over-sized: with DepthOfField, the far ones blur further.
+function BokehParticles() {
+  const ref = useRef<THREE.Points>(null)
+
+  const { pos, col } = useMemo(() => {
+    const COUNT = 130
+    const pos = new Float32Array(COUNT * 3)
+    const col = new Float32Array(COUNT * 3)
+
+    for (let i = 0; i < COUNT; i++) {
+      pos[i * 3]     = (Math.random() - 0.5) * 16
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 10
+      pos[i * 3 + 2] = -5 - Math.random() * 12  // deep background only
+
+      if (Math.random() > 0.45) {
+        // Gold bokeh
+        col[i * 3] = 0.78; col[i * 3 + 1] = 0.60; col[i * 3 + 2] = 0.22
+      } else {
+        // Blue bokeh
+        col[i * 3] = 0.22; col[i * 3 + 1] = 0.44; col[i * 3 + 2] = 1.0
+      }
+    }
+    return { pos, col }
+  }, [])
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return
+    const t = clock.elapsedTime
+    // Very slow drift — creates a parallax against the dust layer
+    ref.current.rotation.y = t * 0.005
+    ref.current.rotation.z = t * 0.003
+  })
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[pos, 3]} />
+        <bufferAttribute attach="attributes-color"    args={[col, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.10}
+        vertexColors
+        transparent
+        opacity={0.18}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </points>
+  )
+}
+
+export function FloatingParticles() {
+  return (
+    <>
+      <DustParticles />
+      <BokehParticles />
+    </>
   )
 }
