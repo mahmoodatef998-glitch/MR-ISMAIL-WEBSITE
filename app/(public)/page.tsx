@@ -1,4 +1,4 @@
-import { Hero3D } from '@/components/hero-3d'
+import { HeroSection } from '@/components/sections/hero-section'
 import { BrandsStrip } from '@/components/sections/brands-strip'
 import { ProductsSection } from '@/components/sections/products-section'
 import { FeaturesSection } from '@/components/sections/features-section'
@@ -34,7 +34,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero3D />
+      <HeroSection />
       <BrandsStrip />
       <ProductsSection products={products} />
       <FeaturesSection />
