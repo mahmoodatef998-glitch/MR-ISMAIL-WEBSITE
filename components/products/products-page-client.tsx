@@ -3,10 +3,8 @@
 import { useRouter, usePathname } from 'next/navigation'
 import { useLanguage } from '@/hooks/use-language'
 import { ProductCard } from './product-card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Product } from '@/types'
-import { Search, SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useState, useTransition } from 'react'
 
 interface Props {
@@ -24,15 +22,8 @@ interface Props {
 const CATEGORIES = ['', 'Smartphones', 'Accessories', 'Spare Parts']
 
 export function ProductsPageClient({
-  products,
-  brands,
-  total,
-  totalPages,
-  currentPage,
-  currentCategory,
-  currentBrand,
-  currentSearch,
-  currentSort,
+  products, brands, total, totalPages,
+  currentPage, currentCategory, currentBrand, currentSearch, currentSort,
 }: Props) {
   const { t, lang } = useLanguage()
   const router = useRouter()
@@ -43,14 +34,12 @@ export function ProductsPageClient({
 
   const updateParams = (updates: Record<string, string>) => {
     const params = new URLSearchParams()
-    const current = {
-      category: currentCategory,
-      brand: currentBrand,
-      search: currentSearch,
-      sort: currentSort,
-      page: String(currentPage),
+    const merged = {
+      category: currentCategory, brand: currentBrand,
+      search: currentSearch, sort: currentSort,
+      page: String(currentPage), ...updates,
     }
-    const merged = { ...current, ...updates, page: '1' }
+    merged.page = '1'
     Object.entries(merged).forEach(([k, v]) => { if (v) params.set(k, v) })
     startTransition(() => router.push(`${pathname}?${params.toString()}`))
   }
@@ -64,9 +53,8 @@ export function ProductsPageClient({
 
   const Sidebar = () => (
     <div className="space-y-6">
-      {/* Categories */}
       <div>
-        <h3 className="font-semibold text-[#0d1b2a] mb-3 text-sm uppercase tracking-wide">
+        <h3 className="text-[10px] font-bold text-[#c8a96e]/70 uppercase tracking-widest mb-3">
           {lang === 'en' ? 'Category' : 'الفئة'}
         </h3>
         <div className="space-y-1">
@@ -74,10 +62,10 @@ export function ProductsPageClient({
             <button
               key={cat}
               onClick={() => updateParams({ category: cat })}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
                 currentCategory === cat
-                  ? 'bg-[#0d1b2a] text-[#c8a96e] font-semibold'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#c8a96e]/15 text-[#c8a96e] font-semibold border border-[#c8a96e]/20'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {categoryLabels[cat]}
@@ -86,17 +74,16 @@ export function ProductsPageClient({
         </div>
       </div>
 
-      {/* Brands */}
       {brands.length > 0 && (
         <div>
-          <h3 className="font-semibold text-[#0d1b2a] mb-3 text-sm uppercase tracking-wide">
+          <h3 className="text-[10px] font-bold text-[#c8a96e]/70 uppercase tracking-widest mb-3">
             {lang === 'en' ? 'Brand' : 'العلامة التجارية'}
           </h3>
           <div className="space-y-1">
             <button
               onClick={() => updateParams({ brand: '' })}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                !currentBrand ? 'bg-[#0d1b2a] text-[#c8a96e] font-semibold' : 'text-gray-600 hover:bg-gray-100'
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                !currentBrand ? 'bg-[#c8a96e]/15 text-[#c8a96e] font-semibold border border-[#c8a96e]/20' : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {lang === 'en' ? 'All Brands' : 'جميع الماركات'}
@@ -105,8 +92,8 @@ export function ProductsPageClient({
               <button
                 key={b}
                 onClick={() => updateParams({ brand: b })}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  currentBrand === b ? 'bg-[#0d1b2a] text-[#c8a96e] font-semibold' : 'text-gray-600 hover:bg-gray-100'
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                  currentBrand === b ? 'bg-[#c8a96e]/15 text-[#c8a96e] font-semibold border border-[#c8a96e]/20' : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 {b}
@@ -119,26 +106,26 @@ export function ProductsPageClient({
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#050b18]">
       {/* Header */}
-      <div className="bg-[#0d1b2a] py-10">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-white mb-2">{t.products.title}</h1>
+      <div className="bg-[#0a1628] border-b border-white/5 pt-24 pb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">{t.products.title}</h1>
           <p className="text-gray-400">{t.products.subtitle}</p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Search & Sort bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* Search & Sort */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <form onSubmit={(e) => { e.preventDefault(); updateParams({ search }) }}>
-              <Input
+              <input
                 placeholder={t.products.search}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
+                className="w-full h-10 pl-9 pr-4 bg-[#0a1628] border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#c8a96e]/50 transition-colors"
               />
             </form>
           </div>
@@ -146,41 +133,39 @@ export function ProductsPageClient({
           <select
             value={currentSort}
             onChange={(e) => updateParams({ sort: e.target.value })}
-            className="h-10 rounded-md border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#c8a96e]"
+            className="h-10 rounded-lg border border-white/10 bg-[#0a1628] px-3 text-sm text-white focus:outline-none focus:border-[#c8a96e]/50 transition-colors"
           >
             <option value="newest">{t.products.newest}</option>
             <option value="name">{t.products.nameAZ}</option>
             <option value="category">{t.products.category}</option>
           </select>
 
-          <Button
-            variant="outline"
-            className="sm:hidden flex items-center gap-2"
+          <button
+            className="sm:hidden flex items-center justify-center gap-2 h-10 px-4 rounded-lg border border-white/10 bg-[#0a1628] text-sm text-gray-300 hover:text-white transition-colors"
             onClick={() => setMobileFilters(!mobileFilters)}
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            {mobileFilters ? <X className="w-4 h-4" /> : <SlidersHorizontal className="w-4 h-4" />}
             {lang === 'en' ? 'Filters' : 'فلاتر'}
-          </Button>
+          </button>
         </div>
 
         {/* Mobile filters */}
         {mobileFilters && (
-          <div className="sm:hidden bg-white rounded-xl border border-gray-200 p-4 mb-6">
+          <div className="sm:hidden bg-[#0a1628] rounded-xl border border-white/5 p-4 mb-6">
             <Sidebar />
           </div>
         )}
 
         <div className="flex gap-8">
-          {/* Sidebar - Desktop */}
-          <aside className="hidden sm:block w-56 shrink-0">
-            <div className="bg-white rounded-xl border border-gray-200 p-5 sticky top-24">
+          {/* Sidebar Desktop */}
+          <aside className="hidden sm:block w-52 shrink-0">
+            <div className="bg-[#0a1628] rounded-xl border border-white/5 p-5 sticky top-24">
               <Sidebar />
             </div>
           </aside>
 
-          {/* Products Grid */}
+          {/* Grid */}
           <div className="flex-1">
-            {/* Count */}
             <p className="text-sm text-gray-500 mb-4">
               {total} {lang === 'en' ? 'products found' : 'منتج موجود'}
             </p>
@@ -188,15 +173,18 @@ export function ProductsPageClient({
             {isPending ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-white rounded-xl border border-gray-200 h-72 skeleton" />
+                  <div key={i} className="bg-[#0a1628] rounded-2xl border border-white/5 h-72 animate-pulse" />
                 ))}
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-gray-400 text-lg">{t.products.noProducts}</p>
-                <Button variant="outline" className="mt-4" onClick={() => updateParams({ category: '', brand: '', search: '' })}>
+                <p className="text-gray-500 text-lg mb-4">{t.products.noProducts}</p>
+                <button
+                  onClick={() => updateParams({ category: '', brand: '', search: '' })}
+                  className="px-5 py-2 rounded-lg border border-white/10 text-sm text-gray-400 hover:text-white hover:border-white/20 transition-all"
+                >
                   {lang === 'en' ? 'Clear Filters' : 'مسح الفلاتر'}
-                </Button>
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -208,38 +196,36 @@ export function ProductsPageClient({
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
+              <div className="mt-10 flex items-center justify-center gap-2">
+                <button
                   disabled={currentPage <= 1}
                   onClick={() => updateParams({ page: String(currentPage - 1) })}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                </Button>
+                </button>
 
-                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                  const p = i + 1
-                  return (
-                    <Button
-                      key={p}
-                      variant={currentPage === p ? 'default' : 'outline'}
-                      size="icon"
-                      onClick={() => updateParams({ page: String(p) })}
-                    >
-                      {p}
-                    </Button>
-                  )
-                })}
+                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => updateParams({ page: String(p) })}
+                    className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
+                      currentPage === p
+                        ? 'bg-[#c8a96e] text-[#050b18]'
+                        : 'border border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
 
-                <Button
-                  variant="outline"
-                  size="icon"
+                <button
                   disabled={currentPage >= totalPages}
                   onClick={() => updateParams({ page: String(currentPage + 1) })}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                   <ChevronRight className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
             )}
           </div>
