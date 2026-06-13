@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, FileText, Settings, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Package, FileText, Settings, ChevronRight, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { signOutAction } from '@/app/admin/actions'
 
 const navItems = [
   { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -54,14 +55,24 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-[#1a2f45]">
+      <div className="p-3 border-t border-[#1a2f45] space-y-1">
         <Link
           href="/"
-          className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           target="_blank"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-[#1a2f45] transition-colors"
         >
-          ← View Public Site
+          <span className="text-xs">↗</span>
+          <span>View Public Site</span>
         </Link>
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:text-white hover:bg-red-600/20 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
+          </button>
+        </form>
       </div>
     </aside>
   )
