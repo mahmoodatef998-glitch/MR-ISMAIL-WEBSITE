@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useLanguage } from '@/hooks/use-language'
 import { Product } from '@/types'
 import { Tag, ArrowUpRight, ArrowRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { fadeUp, fadeLeft, fadeRight, stagger, scaleIn, viewportOnce } from '@/lib/motion'
 
 interface Props {
@@ -34,7 +34,7 @@ export function ProductsSection({ products }: Props) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
 
         {/* Header */}
-        <motion.div
+        <m.div
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12"
           variants={stagger(0, 0.12)}
           initial="hidden"
@@ -42,15 +42,15 @@ export function ProductsSection({ products }: Props) {
           viewport={viewportOnce}
         >
           <div>
-            <motion.p variants={fadeLeft} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+            <m.p variants={fadeLeft} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
               {lang === 'en' ? 'Our Catalog' : 'الكتالوج'}
-            </motion.p>
-            <motion.h2 variants={fadeLeft} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+            </m.p>
+            <m.h2 variants={fadeLeft} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
               {lang === 'en' ? 'Premium Wholesale' : 'منتجات الجملة'}<br />
               <span className="gold-text">{lang === 'en' ? 'Products' : 'المتميزة'}</span>
-            </motion.h2>
+            </m.h2>
           </div>
-          <motion.div variants={fadeRight}>
+          <m.div variants={fadeRight}>
             <Link
               href="/products"
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#c8a96e] hover:gap-3 transition-all group"
@@ -58,11 +58,11 @@ export function ProductsSection({ products }: Props) {
               {lang === 'en' ? 'View Full Catalog' : 'عرض الكتالوج الكامل'}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* Category Tabs */}
-        <motion.div
+        <m.div
           className="flex flex-wrap gap-2 mb-10"
           variants={stagger(0.05, 0.07)}
           initial="hidden"
@@ -70,7 +70,7 @@ export function ProductsSection({ products }: Props) {
           viewport={viewportOnce}
         >
           {CATS.map((c) => (
-            <motion.button
+            <m.button
               key={c.key}
               variants={scaleIn}
               whileHover={{ scale: 1.04 }}
@@ -83,14 +83,14 @@ export function ProductsSection({ products }: Props) {
               }`}
             >
               {lang === 'ar' ? c.ar : c.en}
-            </motion.button>
+            </m.button>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Grid */}
         <AnimatePresence mode="wait">
           {shown.length === 0 ? (
-            <motion.div
+            <m.div
               key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -98,9 +98,9 @@ export function ProductsSection({ products }: Props) {
               className="text-center py-20 text-gray-600 text-sm"
             >
               {lang === 'en' ? 'No products yet — connect your database.' : 'لا توجد منتجات حتى الآن'}
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key={cat}
               initial="hidden"
               animate="show"
@@ -109,14 +109,14 @@ export function ProductsSection({ products }: Props) {
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                 {shown.map((product) => (
-                  <motion.div key={product.id} variants={fadeUp}>
+                  <m.div key={product.id} variants={fadeUp}>
                     <ProductCard product={product} lang={lang} />
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
 
               {filtered.length > 9 && (
-                <motion.div variants={fadeUp} className="text-center">
+                <m.div variants={fadeUp} className="text-center">
                   <Link
                     href="/products"
                     className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#c8a96e]/25 text-[#c8a96e] font-semibold rounded-xl hover:bg-[#c8a96e]/[0.08] hover:border-[#c8a96e]/50 transition-all text-sm"
@@ -124,9 +124,9 @@ export function ProductsSection({ products }: Props) {
                     {lang === 'en' ? `View All ${filtered.length} Products` : `عرض كل ${filtered.length} منتج`}
                     <ArrowUpRight className="w-4 h-4" />
                   </Link>
-                </motion.div>
+                </m.div>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -141,7 +141,7 @@ function ProductCard({ product, lang }: { product: Product; lang: string }) {
 
   return (
     <Link href={`/products/${product.slug}`} className="group block">
-      <motion.div
+      <m.div
         whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
         className="card-shimmer bg-[#0a1628] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-[#c8a96e]/30 hover:shadow-xl hover:shadow-black/40 transition-colors duration-300"
       >
@@ -183,7 +183,7 @@ function ProductCard({ product, lang }: { product: Product; lang: string }) {
             </div>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </Link>
   )
 }

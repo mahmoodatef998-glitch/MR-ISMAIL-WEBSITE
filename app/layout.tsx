@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/hooks/use-language'
 import { Toaster } from '@/components/ui/toaster'
+import { MotionProvider } from '@/components/providers/motion-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,8 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
         <LanguageProvider>
-          {children}
-          <Toaster />
+          <MotionProvider>
+            {children}
+            <Toaster />
+          </MotionProvider>
         </LanguageProvider>
       </body>
     </html>

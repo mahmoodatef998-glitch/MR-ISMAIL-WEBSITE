@@ -2,7 +2,7 @@
 
 import { useLanguage } from '@/hooks/use-language'
 import { Shield, Zap, Globe2, HeadphonesIcon, BadgeCheck, Package } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { fadeUp, fadeIn, stagger, viewportOnce } from '@/lib/motion'
 
 const FEATURES = [
@@ -47,26 +47,26 @@ export function FeaturesSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
         {/* Header */}
-        <motion.div
+        <m.div
           className="text-center max-w-2xl mx-auto mb-16"
           variants={stagger(0, 0.12)}
           initial="hidden"
           whileInView="show"
           viewport={viewportOnce}
         >
-          <motion.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+          <m.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
             {lang === 'en' ? 'Why Choose Us' : 'لماذا تختارنا'}
-          </motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
+          </m.p>
+          <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
             {lang === 'en' ? (<>Built for Businesses<br /><span className="gold-text">That Demand More</span></>) : (<>مبني للشركات التي<br /><span className="gold-text">تطلب الأفضل</span></>)}
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-gray-500 text-sm leading-relaxed">
+          </m.h2>
+          <m.p variants={fadeUp} className="text-gray-500 text-sm leading-relaxed">
             {lang === 'en' ? 'Fifteen years of wholesale experience distilled into a supply chain that just works.' : 'خمسة عشر عامًا من الخبرة في الجملة تتجلى في سلسلة توريد تعمل بكفاءة.'}
-          </motion.p>
-        </motion.div>
+          </m.p>
+        </m.div>
 
         {/* Cards */}
-        <motion.div
+        <m.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={stagger(0.1, 0.1)}
           initial="hidden"
@@ -76,7 +76,7 @@ export function FeaturesSection() {
           {FEATURES.map(({ icon: Icon, en, ar }, i) => {
             const content = lang === 'ar' ? ar : en
             return (
-              <motion.div
+              <m.div
                 key={i}
                 variants={fadeUp}
                 whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
@@ -84,19 +84,19 @@ export function FeaturesSection() {
               >
                 <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#c8a96e]/0 group-hover:bg-[#c8a96e]/6 blur-2xl transition-all duration-500" />
                 <div className="relative">
-                  <motion.div
+                  <m.div
                     whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
                     className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#c8a96e]/10 border border-[#c8a96e]/15 mb-5 group-hover:bg-[#c8a96e]/15 group-hover:border-[#c8a96e]/30 transition-all duration-300"
                   >
                     <Icon className="w-5 h-5 text-[#c8a96e]" />
-                  </motion.div>
+                  </m.div>
                   <h3 className="text-white font-bold text-base mb-2.5 group-hover:text-[#c8a96e] transition-colors duration-200">{content.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{content.desc}</p>
                 </div>
-              </motion.div>
+              </m.div>
             )
           })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )
