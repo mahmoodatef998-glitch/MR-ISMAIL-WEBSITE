@@ -11,6 +11,7 @@ import { slugify } from '@/lib/utils'
 import { ProductFormData } from '@/lib/validations'
 import { Plus, Trash2, Loader2 } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
+import { ImageUploader } from './image-uploader'
 
 interface Props {
   initialData?: Partial<ProductFormData> & { id?: string }
@@ -53,14 +54,6 @@ export function ProductForm({ initialData, mode }: Props) {
     setData({ ...data, specs: data.specs.filter((_, idx) => idx !== i) })
   }
 
-  const addImage = () => {
-    const url = prompt('Enter image URL:')
-    if (url) setData({ ...data, images: [...data.images, url] })
-  }
-
-  const removeImage = (i: number) => {
-    setData({ ...data, images: data.images.filter((_, idx) => idx !== i) })
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -181,30 +174,11 @@ export function ProductForm({ initialData, mode }: Props) {
 
       {/* Images */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-gray-800">Images</h2>
-          <Button type="button" variant="outline" size="sm" onClick={addImage}>
-            <Plus className="w-3 h-3 mr-1" /> Add Image URL
-          </Button>
-        </div>
-        {data.images.length === 0 ? (
-          <p className="text-sm text-gray-400">No images added. Click "Add Image URL" to add.</p>
-        ) : (
-          <div className="space-y-2">
-            {data.images.map((img, i) => (
-              <div key={i} className="flex gap-2 items-center">
-                <Input value={img} onChange={(e) => {
-                  const imgs = [...data.images]
-                  imgs[i] = e.target.value
-                  setData({ ...data, images: imgs })
-                }} className="flex-1 text-xs font-mono" />
-                <button type="button" onClick={() => removeImage(i)} className="text-red-400 hover:text-red-600 p-1">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <h2 className="font-semibold text-gray-800 mb-4">Images</h2>
+        <ImageUploader
+          images={data.images}
+          onChange={(images) => setData({ ...data, images })}
+        />
       </div>
 
       {/* Status */}
