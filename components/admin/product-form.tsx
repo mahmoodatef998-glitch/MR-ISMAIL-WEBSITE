@@ -31,6 +31,7 @@ export function ProductForm({ initialData, mode }: Props) {
     descriptionAr: initialData?.descriptionAr || '',
     specs: initialData?.specs || [],
     moq: initialData?.moq || 1,
+    stock: initialData?.stock ?? 0,
     images: initialData?.images || [],
     status: initialData?.status || 'active',
     featured: initialData?.featured || false,
@@ -119,6 +120,14 @@ export function ProductForm({ initialData, mode }: Props) {
               value={data.moq}
               onChange={(e) => setData({ ...data, moq: parseInt(e.target.value) || 1 })}
               required
+            />
+          </Field>
+          <Field label="Stock (Available Units)">
+            <Input
+              type="number"
+              min={0}
+              value={data.stock}
+              onChange={(e) => setData({ ...data, stock: parseInt(e.target.value) || 0 })}
             />
           </Field>
         </div>

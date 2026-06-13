@@ -81,6 +81,8 @@ export async function getRFQs(page = 1, pageSize = 20, status?: string, search?:
       ...r,
       message: r.message ?? undefined,
       notes: r.notes ?? undefined,
+      confirmedProductId: r.confirmedProductId ?? undefined,
+      confirmedQty: r.confirmedQty ?? undefined,
       status: r.status as 'new' | 'in_review' | 'quoted' | 'closed',
       items: JSON.parse(r.items) as RFQItem[],
     })),

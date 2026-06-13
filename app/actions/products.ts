@@ -16,6 +16,7 @@ function mapProduct(p: {
   descriptionAr: string
   specs: string
   moq: number
+  stock: number
   images: string
   status: string
   featured: boolean

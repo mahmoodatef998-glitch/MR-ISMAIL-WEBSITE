@@ -9,6 +9,7 @@ export interface Product {
   descriptionAr: string
   specs: ProductSpec[]
   moq: number
+  stock: number
   images: string[]
   status: 'active' | 'inactive' | 'out_of_stock'
   featured: boolean
@@ -40,6 +41,8 @@ export interface RFQ {
   message?: string
   status: 'new' | 'in_review' | 'quoted' | 'closed'
   notes?: string
+  confirmedProductId?: string
+  confirmedQty?: number
   createdAt: Date
   updatedAt: Date
 }

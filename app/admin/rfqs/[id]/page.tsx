@@ -9,7 +9,15 @@ interface Props {
 
 export default async function RFQDetailPage({ params }: Props) {
   const { id } = await params
-  const rfq = await prisma.rFQ.findUnique({ where: { id } })
+
+  const [rfq, products] = await Promise.all([
+    prisma.rFQ.findUnique({ where: { id } }),
+    prisma.product.findMany({
+      where: { status: 'active' },
+      select: { id: true, name: true, brand: true, stock: true },
+      orderBy: { name: 'asc' },
+    }),
+  ])
 
   if (!rfq) notFound()
 
@@ -17,9 +25,11 @@ export default async function RFQDetailPage({ params }: Props) {
     ...rfq,
     message: rfq.message ?? undefined,
     notes: rfq.notes ?? undefined,
+    confirmedProductId: rfq.confirmedProductId ?? undefined,
+    confirmedQty: rfq.confirmedQty ?? undefined,
     status: rfq.status as 'new' | 'in_review' | 'quoted' | 'closed',
     items: JSON.parse(rfq.items) as RFQItem[],
   }
 
-  return <RFQDetailClient rfq={rfqData} />
+  return <RFQDetailClient rfq={rfqData} products={products} />
 }

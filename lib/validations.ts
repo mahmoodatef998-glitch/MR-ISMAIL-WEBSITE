@@ -39,6 +39,7 @@ export const productSchema = z.object({
     .array(z.object({ key: z.string(), value: z.string() }))
     .default([]),
   moq: z.number().min(1, 'MOQ must be at least 1'),
+  stock: z.number().min(0).default(0),
   images: z.array(z.string()).default([]),
   status: z.enum(['active', 'inactive', 'out_of_stock']).default('active'),
   featured: z.boolean().default(false),

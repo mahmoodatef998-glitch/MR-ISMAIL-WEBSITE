@@ -123,6 +123,7 @@ export function AdminProductsClient({ products, total, totalPages, currentPage, 
                   <th className="text-left py-3 px-4 text-xs text-gray-500 font-medium">BRAND</th>
                   <th className="text-left py-3 px-4 text-xs text-gray-500 font-medium">CATEGORY</th>
                   <th className="text-center py-3 px-4 text-xs text-gray-500 font-medium">MOQ</th>
+                  <th className="text-center py-3 px-4 text-xs text-gray-500 font-medium">STOCK</th>
                   <th className="text-left py-3 px-4 text-xs text-gray-500 font-medium">STATUS</th>
                   <th className="text-left py-3 px-4 text-xs text-gray-500 font-medium">FEATURED</th>
                   <th className="text-right py-3 px-4 text-xs text-gray-500 font-medium">ACTIONS</th>
@@ -142,6 +143,17 @@ export function AdminProductsClient({ products, total, totalPages, currentPage, 
                       <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">{product.category}</span>
                     </td>
                     <td className="py-3 px-4 text-center text-gray-700">{product.moq}</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className={`font-bold text-sm ${
+                        product.stock === 0
+                          ? 'text-red-500'
+                          : product.stock < 100
+                          ? 'text-amber-600'
+                          : 'text-green-600'
+                      }`}>
+                        {product.stock.toLocaleString()}
+                      </span>
+                    </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(product.status)}`}>
                         {getStatusLabel(product.status)}
