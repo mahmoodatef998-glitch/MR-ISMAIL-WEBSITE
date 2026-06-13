@@ -56,46 +56,111 @@ function getPhoneOpacity(p: number): number {
   return 1 - mapRange(p, 0.91, 0.98, 0, 1)
 }
 
+function rr(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.arcTo(x + w, y, x + w, y + h, r)
+  ctx.arcTo(x + w, y + h, x, y + h, r)
+  ctx.arcTo(x, y + h, x, y, r)
+  ctx.arcTo(x, y, x + w, y, r)
+  ctx.closePath()
+}
+
 function buildScreenTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas')
   canvas.width = 512; canvas.height = 1024
   const ctx = canvas.getContext('2d')!
 
-  ctx.fillStyle = '#000008'; ctx.fillRect(0, 0, 512, 1024)
+  // Deep background — rich dark blue, not pure black
+  const bg = ctx.createLinearGradient(0, 0, 0, 1024)
+  bg.addColorStop(0,   '#060820')
+  bg.addColorStop(0.5, '#050718')
+  bg.addColorStop(1,   '#020310')
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, 512, 1024)
 
-  const neb = ctx.createRadialGradient(256, 512, 0, 256, 512, 280)
-  neb.addColorStop(0, 'rgba(80, 100, 255, 0.45)')
-  neb.addColorStop(0.5, 'rgba(40, 60, 200, 0.2)')
-  neb.addColorStop(1, 'transparent')
+  // Central blue nebula — phone feels like it has depth
+  const neb = ctx.createRadialGradient(256, 530, 0, 256, 530, 310)
+  neb.addColorStop(0,   'rgba(50, 80, 240, 0.55)')
+  neb.addColorStop(0.4, 'rgba(28, 50, 180, 0.28)')
+  neb.addColorStop(1,   'transparent')
   ctx.fillStyle = neb; ctx.fillRect(0, 0, 512, 1024)
 
-  const top = ctx.createRadialGradient(256, 100, 0, 256, 100, 150)
-  top.addColorStop(0, 'rgba(200, 169, 110, 0.3)')
-  top.addColorStop(1, 'transparent')
-  ctx.fillStyle = top; ctx.fillRect(0, 0, 512, 1024)
+  // Top gold accent — brand warmth
+  const topGlow = ctx.createRadialGradient(256, 60, 0, 256, 60, 180)
+  topGlow.addColorStop(0, 'rgba(200, 169, 110, 0.20)')
+  topGlow.addColorStop(1, 'transparent')
+  ctx.fillStyle = topGlow; ctx.fillRect(0, 0, 512, 1024)
 
-  ctx.strokeStyle = 'rgba(200, 169, 110, 0.12)'; ctx.lineWidth = 0.5
-  for (let y = 0; y < 1024; y += 36) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke()
+  // ── Status bar ──────────────────────────────────────────────────────
+  ctx.fillStyle = 'rgba(255,255,255,0.08)'
+  ctx.fillRect(0, 0, 512, 54)
+
+  // Time — large, clean
+  ctx.fillStyle = 'rgba(255,255,255,0.88)'
+  ctx.font = 'bold 86px -apple-system, "SF Pro Display", Arial, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText('9:41', 256, 258)
+
+  // Date — subtle
+  ctx.fillStyle = 'rgba(255,255,255,0.42)'
+  ctx.font = '28px -apple-system, "SF Pro Display", Arial, sans-serif'
+  ctx.fillText('Friday, 13 June', 256, 306)
+
+  // ── Lock screen widget card ──────────────────────────────────────────
+  rr(ctx, 44, 340, 424, 145, 22)
+  ctx.fillStyle = 'rgba(12, 18, 55, 0.55)'
+  ctx.fill()
+  rr(ctx, 44, 340, 424, 145, 22)
+  ctx.strokeStyle = 'rgba(200, 169, 110, 0.18)'
+  ctx.lineWidth = 1
+  ctx.stroke()
+
+  // Widget content hint (two faint lines)
+  ctx.fillStyle = 'rgba(255,255,255,0.22)'
+  rr(ctx, 72, 364, 200, 14, 7)
+  ctx.fill()
+  rr(ctx, 72, 390, 140, 10, 5)
+  ctx.fill()
+
+  // ── App icons (2 rows × 4) ──────────────────────────────────────────
+  const iconColors = [
+    'rgba(55,  110, 255, 0.42)',
+    'rgba(200, 169, 110, 0.38)',
+    'rgba(40,  190, 170, 0.36)',
+    'rgba(170,  55, 255, 0.38)',
+    'rgba(50,  200,  90, 0.34)',
+    'rgba(255, 100,  55, 0.34)',
+    'rgba(255, 55,   110, 0.34)',
+    'rgba(55,  180, 255, 0.34)',
+  ]
+  const iconW = 88, iconH = 88, iconR = 22
+  const gapX  = 18
+  const rowW  = 4 * iconW + 3 * gapX
+  const x0    = (512 - rowW) / 2
+
+  for (let row = 0; row < 2; row++) {
+    for (let col = 0; col < 4; col++) {
+      const idx = row * 4 + col
+      const x   = x0 + col * (iconW + gapX)
+      const y   = 530 + row * (iconH + 18)
+      // Icon background
+      rr(ctx, x, y, iconW, iconH, iconR)
+      ctx.fillStyle = iconColors[idx]
+      ctx.fill()
+      // Subtle inner glow
+      const glow = ctx.createRadialGradient(x + iconW/2, y + 18, 0, x + iconW/2, y + 18, iconH * 0.7)
+      glow.addColorStop(0, 'rgba(255,255,255,0.14)')
+      glow.addColorStop(1, 'transparent')
+      rr(ctx, x, y, iconW, iconH, iconR)
+      ctx.fillStyle = glow
+      ctx.fill()
+    }
   }
-  for (let x = 0; x < 512; x += 36) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 1024); ctx.stroke()
-  }
 
-  ctx.strokeStyle = 'rgba(200, 169, 110, 0.55)'; ctx.lineWidth = 1.2
-  ctx.beginPath(); ctx.moveTo(80, 190); ctx.lineTo(432, 190); ctx.stroke()
-  ctx.beginPath(); ctx.moveTo(80, 834); ctx.lineTo(432, 834); ctx.stroke()
-
-  const cc = ctx.createRadialGradient(256, 512, 0, 256, 512, 100)
-  cc.addColorStop(0, 'rgba(200, 169, 110, 0.45)')
-  cc.addColorStop(1, 'transparent')
-  ctx.fillStyle = cc; ctx.fillRect(0, 0, 512, 1024)
-
-  ctx.fillStyle = 'rgba(200, 169, 110, 0.7)'
-  for (let i = 0; i < 12; i++) {
-    const x = 80 + (i % 6) * 72; const y = 350 + Math.floor(i / 6) * 60
-    ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill()
-  }
+  // ── Bottom home indicator ────────────────────────────────────────────
+  rr(ctx, 206, 966, 100, 6, 3)
+  ctx.fillStyle = 'rgba(255,255,255,0.30)'
+  ctx.fill()
 
   return new THREE.CanvasTexture(canvas)
 }

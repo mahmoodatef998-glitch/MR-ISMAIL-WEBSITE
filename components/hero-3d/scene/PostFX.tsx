@@ -1,28 +1,19 @@
 'use client'
 
-import { EffectComposer, Bloom, Vignette, DepthOfField } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 
 export function PostFX() {
   return (
     <EffectComposer>
-      {/* Depth of field — background stays soft, phone stays sharp */}
-      <DepthOfField
-        focusDistance={0.046}   // normalised: phone ~4.5 units from camera; far=100
-        focalLength={0.012}     // subtle — only far objects (ScreenWorld panels) blur
-        bokehScale={1.6}
-        height={480}
-      />
-
-      {/* Cinematic bloom — only very bright emissives glow (screen, particles) */}
+      {/* Bloom: lower threshold catches metallic highlights + screen edge glow */}
       <Bloom
-        intensity={0.85}
-        luminanceThreshold={0.52}
-        luminanceSmoothing={0.95}
-        height={300}
+        intensity={1.4}
+        luminanceThreshold={0.35}
+        luminanceSmoothing={0.85}
+        height={400}
       />
-
-      {/* Deep vignette — IMAX-style cinematic framing */}
-      <Vignette offset={0.28} darkness={0.90} />
+      {/* Vignette was 0.90 — basically black. 0.52 is cinematic without crushing. */}
+      <Vignette offset={0.30} darkness={0.52} />
     </EffectComposer>
   )
 }

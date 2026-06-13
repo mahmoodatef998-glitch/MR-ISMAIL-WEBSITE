@@ -30,12 +30,12 @@ export function PhoneCanvas({ progressRef }: Props) {
         alpha:              false,
         powerPreference:    'high-performance',
         toneMapping:        THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.5,
+        toneMappingExposure: 1.85,
       }}
       className="!bg-transparent"
     >
-      <color attach="background" args={['#000005']} />
-      <fog attach="fog" args={['#020510', 14, 40]} />
+      <color attach="background" args={['#01071e']} />
+      <fog attach="fog" args={['#010918', 16, 42]} />
 
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
