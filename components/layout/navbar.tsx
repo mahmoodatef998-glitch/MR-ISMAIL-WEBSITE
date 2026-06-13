@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/hooks/use-language'
-import { Menu, X, Globe } from 'lucide-react'
+import { Menu, X, Globe, LayoutDashboard } from 'lucide-react'
 
 const NAV_LINKS = [
   { id: 'home',     en: 'Home',     ar: 'الرئيسية' },
@@ -89,6 +89,13 @@ export function Navbar() {
               {lang === 'en' ? 'عربي' : 'EN'}
             </button>
             <a
+              href="/admin/login"
+              title="Admin"
+              className="hidden sm:flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:text-[#c8a96e] hover:bg-[#c8a96e]/10 transition-all duration-200"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+            </a>
+            <a
               href="#contact"
               onClick={(e) => handleClick(e, 'contact')}
               className="hidden md:inline-flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-[#c8a96e] to-[#e8c97a] text-[#050b18] text-sm font-bold rounded-xl hover:shadow-lg hover:shadow-[#c8a96e]/25 hover:-translate-y-px transition-all duration-200"
@@ -130,6 +137,13 @@ export function Navbar() {
               <Globe className="w-3.5 h-3.5" />
               {lang === 'en' ? 'العربية' : 'English'}
             </button>
+            <a
+              href="/admin/login"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#c8a96e]/20 text-[#c8a96e] text-sm font-medium hover:bg-[#c8a96e]/10 transition-all"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              Admin
+            </a>
             <a
               href="#contact"
               onClick={(e) => handleClick(e, 'contact')}
