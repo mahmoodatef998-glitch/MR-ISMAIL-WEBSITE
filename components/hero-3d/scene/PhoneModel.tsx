@@ -6,7 +6,7 @@ import { RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import { mapRange, lerp, easeOutExpo } from '../utils'
 
-// ─── Phone Dimensions ────────────────────────────────────────────────────────
+// ─── iPhone 17 Pro Max proportions ───────────────────────────────────────────
 const W  = 0.77
 const H  = 1.59
 const D  = 0.078
@@ -14,9 +14,6 @@ const CR = 0.056
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-// Stagger offsets — tightened to fit the sharper 0.48–0.60 explosion window.
-// Front layers lead, internals follow, rear glass is last.
-// Max stagger 0.024 keeps the whole cascade within the window.
 const STAGGER = {
   frontGlass: 0,
   island:     0.004,
@@ -32,10 +29,6 @@ const STAGGER = {
 } as const
 
 function getExplode(p: number): number {
-  // Matches unified phase map:
-  //   0.48–0.60  explosion (easeOutExpo: snaps immediately, decelerates)
-  //   0.60–0.73  hold while camera sweeps
-  //   0.73–0.87  reassembly (easeInExpo: slow start then rushes home)
   if (p < 0.48) return 0
   if (p < 0.60) return easeOutExpo(mapRange(p, 0.48, 0.60, 0, 1))
   if (p < 0.73) return 1
@@ -71,96 +64,60 @@ function buildScreenTexture(): THREE.CanvasTexture {
   canvas.width = 512; canvas.height = 1024
   const ctx = canvas.getContext('2d')!
 
-  // Deep background — rich dark blue, not pure black
   const bg = ctx.createLinearGradient(0, 0, 0, 1024)
   bg.addColorStop(0,   '#060820')
   bg.addColorStop(0.5, '#050718')
   bg.addColorStop(1,   '#020310')
   ctx.fillStyle = bg; ctx.fillRect(0, 0, 512, 1024)
 
-  // Central blue nebula — phone feels like it has depth
   const neb = ctx.createRadialGradient(256, 530, 0, 256, 530, 310)
   neb.addColorStop(0,   'rgba(50, 80, 240, 0.55)')
   neb.addColorStop(0.4, 'rgba(28, 50, 180, 0.28)')
   neb.addColorStop(1,   'transparent')
   ctx.fillStyle = neb; ctx.fillRect(0, 0, 512, 1024)
 
-  // Top gold accent — brand warmth
   const topGlow = ctx.createRadialGradient(256, 60, 0, 256, 60, 180)
   topGlow.addColorStop(0, 'rgba(200, 169, 110, 0.20)')
   topGlow.addColorStop(1, 'transparent')
   ctx.fillStyle = topGlow; ctx.fillRect(0, 0, 512, 1024)
 
-  // ── Status bar ──────────────────────────────────────────────────────
-  ctx.fillStyle = 'rgba(255,255,255,0.08)'
-  ctx.fillRect(0, 0, 512, 54)
-
-  // Time — large, clean
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0, 0, 512, 54)
   ctx.fillStyle = 'rgba(255,255,255,0.88)'
   ctx.font = 'bold 86px -apple-system, "SF Pro Display", Arial, sans-serif'
   ctx.textAlign = 'center'
   ctx.fillText('9:41', 256, 258)
 
-  // Date — subtle
   ctx.fillStyle = 'rgba(255,255,255,0.42)'
   ctx.font = '28px -apple-system, "SF Pro Display", Arial, sans-serif'
   ctx.fillText('Friday, 13 June', 256, 306)
 
-  // ── Lock screen widget card ──────────────────────────────────────────
   rr(ctx, 44, 340, 424, 145, 22)
-  ctx.fillStyle = 'rgba(12, 18, 55, 0.55)'
-  ctx.fill()
+  ctx.fillStyle = 'rgba(12, 18, 55, 0.55)'; ctx.fill()
   rr(ctx, 44, 340, 424, 145, 22)
-  ctx.strokeStyle = 'rgba(200, 169, 110, 0.18)'
-  ctx.lineWidth = 1
-  ctx.stroke()
-
-  // Widget content hint (two faint lines)
+  ctx.strokeStyle = 'rgba(200, 169, 110, 0.18)'; ctx.lineWidth = 1; ctx.stroke()
   ctx.fillStyle = 'rgba(255,255,255,0.22)'
-  rr(ctx, 72, 364, 200, 14, 7)
-  ctx.fill()
-  rr(ctx, 72, 390, 140, 10, 5)
-  ctx.fill()
+  rr(ctx, 72, 364, 200, 14, 7); ctx.fill()
+  rr(ctx, 72, 390, 140, 10, 5); ctx.fill()
 
-  // ── App icons (2 rows × 4) ──────────────────────────────────────────
   const iconColors = [
-    'rgba(55,  110, 255, 0.42)',
-    'rgba(200, 169, 110, 0.38)',
-    'rgba(40,  190, 170, 0.36)',
-    'rgba(170,  55, 255, 0.38)',
-    'rgba(50,  200,  90, 0.34)',
-    'rgba(255, 100,  55, 0.34)',
-    'rgba(255, 55,   110, 0.34)',
-    'rgba(55,  180, 255, 0.34)',
+    'rgba(55,110,255,0.42)', 'rgba(200,169,110,0.38)', 'rgba(40,190,170,0.36)', 'rgba(170,55,255,0.38)',
+    'rgba(50,200,90,0.34)',  'rgba(255,100,55,0.34)',  'rgba(255,55,110,0.34)', 'rgba(55,180,255,0.34)',
   ]
-  const iconW = 88, iconH = 88, iconR = 22
-  const gapX  = 18
-  const rowW  = 4 * iconW + 3 * gapX
-  const x0    = (512 - rowW) / 2
-
+  const iconW = 88, iconH = 88, iconR = 22, gapX = 18
+  const x0 = (512 - (4 * iconW + 3 * gapX)) / 2
   for (let row = 0; row < 2; row++) {
     for (let col = 0; col < 4; col++) {
-      const idx = row * 4 + col
-      const x   = x0 + col * (iconW + gapX)
-      const y   = 530 + row * (iconH + 18)
-      // Icon background
+      const x = x0 + col * (iconW + gapX), y = 530 + row * (iconH + 18)
       rr(ctx, x, y, iconW, iconH, iconR)
-      ctx.fillStyle = iconColors[idx]
-      ctx.fill()
-      // Subtle inner glow
+      ctx.fillStyle = iconColors[row * 4 + col]; ctx.fill()
       const glow = ctx.createRadialGradient(x + iconW/2, y + 18, 0, x + iconW/2, y + 18, iconH * 0.7)
-      glow.addColorStop(0, 'rgba(255,255,255,0.14)')
-      glow.addColorStop(1, 'transparent')
-      rr(ctx, x, y, iconW, iconH, iconR)
-      ctx.fillStyle = glow
-      ctx.fill()
+      glow.addColorStop(0, 'rgba(255,255,255,0.14)'); glow.addColorStop(1, 'transparent')
+      rr(ctx, x, y, iconW, iconH, iconR); ctx.fillStyle = glow; ctx.fill()
     }
   }
 
-  // ── Bottom home indicator ────────────────────────────────────────────
   rr(ctx, 206, 966, 100, 6, 3)
-  ctx.fillStyle = 'rgba(255,255,255,0.30)'
-  ctx.fill()
+  ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.fill()
 
   return new THREE.CanvasTexture(canvas)
 }
@@ -183,42 +140,42 @@ export function PhoneModel({ progressRef }: Props) {
   const islandRef      = useRef<THREE.Group>(null)
   const screenLightRef = useRef<THREE.PointLight>(null)
 
-  // Materials: pre-init transparent so we never toggle it per-frame.
-  // clearcoat adds the double-layer sheen seen on real titanium phones and ceramic glass.
+  // Space Black titanium frame
   const titanium = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#1e1e2e',
-    metalness: 0.96,
-    roughness: 0.035,
-    envMapIntensity: 4.0,
-    clearcoat: 0.14,          // subtle titanium sheen
-    clearcoatRoughness: 0.08,
+    color: '#1c1b26',
+    metalness: 0.97,
+    roughness: 0.028,
+    envMapIntensity: 4.5,
+    clearcoat: 0.18,
+    clearcoatRoughness: 0.06,
     transparent: true,
     opacity: 1,
   }), [])
 
+  // Ceramic Shield front glass — reflective, NOT transmission-based.
+  // transmission:0.94 was the culprit showing ugly internals through the glass.
+  // Now it's a real glass: high reflection, just enough opacity to read as glass.
   const frontGlassMat = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#ffffff',
-    transmission: 0.94,
+    color: '#dce8ff',
+    metalness: 0.04,
     roughness: 0,
-    metalness: 0.06,
-    ior: 1.52,
-    thickness: 0.5,
+    envMapIntensity: 9.0,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.0,
     transparent: true,
-    opacity: 0.22,
-    envMapIntensity: 4.0,
-    clearcoat: 1.0,           // ceramic shield glass: perfect coating
-    clearcoatRoughness: 0.0,  // mirror-smooth
+    opacity: 0.58,
   }), [])
 
+  // Deep space black rear glass
   const rearGlassMat = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#070718',
-    metalness: 0.20,
-    roughness: 0.022,
+    color: '#08081a',
+    metalness: 0.14,
+    roughness: 0.012,
     transparent: true,
     opacity: 1,
-    envMapIntensity: 4.0,
-    clearcoat: 0.40,          // rear ceramic/glass has strong coating
-    clearcoatRoughness: 0.02,
+    envMapIntensity: 5.5,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.01,
   }), [])
 
   const screenMat = useMemo(() => {
@@ -231,40 +188,72 @@ export function PhoneModel({ progressRef }: Props) {
     })
   }, [])
 
+  // Battery — graphite slate. Starts at opacity 0: INVISIBLE when assembled.
+  // Fades in only when the explosion begins, so you never see it through the glass.
+  const batteryMat = useMemo(() => new THREE.MeshStandardMaterial({
+    color: '#1e1e30',
+    metalness: 0.52,
+    roughness: 0.42,
+    transparent: true,
+    opacity: 0,
+  }), [])
+
+  // Motherboard — dark silicon PCB. Also starts invisible.
+  const mbMat = useMemo(() => new THREE.MeshStandardMaterial({
+    color: '#101820',
+    metalness: 0.22,
+    roughness: 0.78,
+    transparent: true,
+    opacity: 0,
+  }), [])
+
+  // Chips on MB — slightly lighter so they read against the board
+  const chipMat = useMemo(() => new THREE.MeshStandardMaterial({
+    color: '#1a1a35',
+    metalness: 0.80,
+    roughness: 0.14,
+    transparent: true,
+    opacity: 0,
+  }), [])
+
+  // ── HORIZONTAL explosion positions ────────────────────────────────────────
+  // Parts spread primarily in the X-Y plane (lateral/horizontal), not Z-axis.
+  // The viewer faces the phone front-on, so this creates a clear flat diagram
+  // where every flying part is immediately readable.
   const POS = useMemo(() => ({
-    // Rest positions (assembled) → Exploded positions
-    // Exploded: heavier Z-depth spread makes the explosion feel truly 3D.
-    // Front layers fly toward camera (+Z), rear layers recede (-Z),
-    // internals scatter laterally with Z variation for parallax.
-    frontGlass: { r: new THREE.Vector3(0, 0, D/2+.002),       e: new THREE.Vector3(0,      0,     4.2)  },
-    screen:     { r: new THREE.Vector3(0, 0, D/2-.006),       e: new THREE.Vector3(0.15,   0.1,   3.2)  },
-    rearGlass:  { r: new THREE.Vector3(0, 0, -D/2-.002),      e: new THREE.Vector3(0,      0,    -4.2)  },
-    camModule:  { r: new THREE.Vector3(-.16, .61, -D/2-.014), e: new THREE.Vector3(-2.4,   3.8,   2.0)  },
-    battery:    { r: new THREE.Vector3(.04, -.30, 0),          e: new THREE.Vector3( 3.6,  -1.2,   1.0)  },
-    mb:         { r: new THREE.Vector3(0, .30, 0),             e: new THREE.Vector3(-3.6,   1.2,   0.8)  },
-    btnPower:   { r: new THREE.Vector3(W/2+.006, .15, 0),     e: new THREE.Vector3( 4.6,   0.15,  0.2)  },
-    btnVolUp:   { r: new THREE.Vector3(-W/2-.006, .28, 0),    e: new THREE.Vector3(-4.6,   0.28,  0.2)  },
-    btnVolDown: { r: new THREE.Vector3(-W/2-.006, .05, 0),    e: new THREE.Vector3(-4.6,   0.05,  0.2)  },
-    btnSilent:  { r: new THREE.Vector3(-W/2-.006, .50, 0),    e: new THREE.Vector3(-4.6,   0.50,  0.2)  },
-    island:     { r: new THREE.Vector3(0, H/2-.11, D/2+.004), e: new THREE.Vector3(0,      4.6,   2.4)  },
+    // Front glass: peels up-forward (slight Z, dominant Y)
+    frontGlass: { r: new THREE.Vector3(0, 0, D/2+.002),       e: new THREE.Vector3(0,      0.30,  0.65) },
+    // Screen: minimal movement, stays near center
+    screen:     { r: new THREE.Vector3(0, 0, D/2-.006),       e: new THREE.Vector3(0.06,   0.10,  0.38) },
+    // Rear glass: peels down-backward (mirrors front glass)
+    rearGlass:  { r: new THREE.Vector3(0, 0, -D/2-.002),      e: new THREE.Vector3(0,     -0.30, -0.65) },
+    // Camera module: flies upper-left + slight back (where it lives on the real phone)
+    camModule:  { r: new THREE.Vector3(-.16, .61, -D/2-.014), e: new THREE.Vector3(-1.8,   2.8,  -0.45) },
+    // Battery: slides down-right (bottom half of phone)
+    battery:    { r: new THREE.Vector3(.04, -.30, 0),          e: new THREE.Vector3( 1.6,  -2.4,  -0.25) },
+    // Motherboard: flies up-left (upper half)
+    mb:         { r: new THREE.Vector3(0, .30, 0),             e: new THREE.Vector3(-1.6,   2.2,  -0.25) },
+    // Buttons: purely horizontal to their respective sides
+    btnPower:   { r: new THREE.Vector3(W/2+.006, .15, 0),     e: new THREE.Vector3( 2.8,   0.15,  0.08) },
+    btnVolUp:   { r: new THREE.Vector3(-W/2-.006, .28, 0),    e: new THREE.Vector3(-2.8,   0.28,  0.08) },
+    btnVolDown: { r: new THREE.Vector3(-W/2-.006, .05, 0),    e: new THREE.Vector3(-2.8,   0.05,  0.08) },
+    btnSilent:  { r: new THREE.Vector3(-W/2-.006, .50, 0),    e: new THREE.Vector3(-2.8,   0.50,  0.08) },
+    // Dynamic Island: rises straight up + slight forward
+    island:     { r: new THREE.Vector3(0, H/2-.11, D/2+.004), e: new THREE.Vector3(0,      3.0,   0.50) },
   }), [])
 
   useFrame(({ clock }) => {
-    const p  = progressRef.current
-    const t  = clock.elapsedTime
+    const p = progressRef.current
+    const t = clock.elapsedTime
 
-    // Lead explode factor (for parts that don't drift rotate)
     const ex = getExplodeStaggered(p, STAGGER.frontGlass)
-
     if (!rootRef.current) return
 
-    // Gentle sway — fades during explosion and near the screen close-up
     const phase5Damp = 1 - easeOutExpo(mapRange(p, 0.87, 1.0, 0, 1))
     const swayScale  = (1 - ex) * phase5Damp
-    rootRef.current.rotation.y = Math.sin(t * 0.18) * 0.08 * swayScale
-    rootRef.current.position.y = Math.sin(t * 0.48) * 0.042 * swayScale
+    rootRef.current.rotation.y = Math.sin(t * 0.181) * 0.08 * swayScale
+    rootRef.current.position.y = Math.sin(t * 0.479) * 0.042 * swayScale
 
-    // Helper: lerp a part to its exploded/rest position using its own stagger
     const lp = (
       r: React.RefObject<THREE.Object3D | null>,
       data: { r: THREE.Vector3; e: THREE.Vector3 },
@@ -286,24 +275,29 @@ export function PhoneModel({ progressRef }: Props) {
     lp(btnSilentRef,  POS.btnSilent,  STAGGER.btnSilent)
     lp(islandRef    as React.RefObject<THREE.Object3D | null>,  POS.island,     STAGGER.island)
 
-    // Subtle drift rotation when exploded
+    // Drift rotation for floating internals
     if (camModuleRef.current) {
-      camModuleRef.current.rotation.y = ex * Math.sin(t * .45) * .35
-      camModuleRef.current.rotation.x = ex * Math.cos(t * .38) * .2
+      camModuleRef.current.rotation.y = ex * Math.sin(t * .45) * .22
+      camModuleRef.current.rotation.x = ex * Math.cos(t * .38) * .14
     }
     if (batteryRef.current) {
-      batteryRef.current.rotation.z = ex * Math.sin(t * .37) * .18
-      batteryRef.current.rotation.x = ex * Math.cos(t * .30) * .12
+      batteryRef.current.rotation.z = ex * Math.sin(t * .37) * .12
+      batteryRef.current.rotation.x = ex * Math.cos(t * .30) * .08
     }
     if (mbRef.current) {
-      mbRef.current.rotation.y = ex * Math.sin(t * .33 + 1) * .32
-      mbRef.current.rotation.z = ex * Math.cos(t * .42) * .1
+      mbRef.current.rotation.y = ex * Math.sin(t * .33 + 1) * .18
+      mbRef.current.rotation.z = ex * Math.cos(t * .42) * .08
     }
 
-    // Micro floating — only during the hold phase (parts fully exploded, 0.60–0.73).
-    // Each part oscillates at a unique irrational frequency: they never move in sync,
-    // creating the sensation of zero-gravity rather than a synchronized rig.
-    // Amplitude: ±0.010–0.014 units — imperceptible as animation, felt as life.
+    // ── Internal visibility ───────────────────────────────────────────────────
+    // Battery and MB are fully invisible when assembled. They fade in the moment
+    // the explosion starts — you never see them through the front glass.
+    const internalVis      = Math.min(1, Math.max(0, ex * 3.0))
+    batteryMat.opacity     = internalVis
+    mbMat.opacity          = internalVis
+    chipMat.opacity        = internalVis * 0.85
+
+    // ── Micro floating during hold ────────────────────────────────────────────
     const floatAmt = p > 0.60 ? ex * (1 - easeOutExpo(mapRange(p, 0.73, 0.80, 0, 1))) : 0
     if (floatAmt > 0.005) {
       if (frontGlassRef.current) {
@@ -314,17 +308,14 @@ export function PhoneModel({ progressRef }: Props) {
         rearGlassRef.current.position.y += Math.sin(t * 0.47 + 1.4) * 0.009 * floatAmt
         rearGlassRef.current.position.x += Math.cos(t * 0.41 + 0.8) * 0.006 * floatAmt
       }
-      if (islandRef.current) {
-        islandRef.current.position.y += Math.sin(t * 0.61 + 2.1) * 0.014 * floatAmt
-      }
+      if (islandRef.current)     islandRef.current.position.y     += Math.sin(t * 0.61 + 2.1) * 0.014 * floatAmt
       if (btnPowerRef.current)   btnPowerRef.current.position.y   += Math.sin(t * 0.64 + 2.1) * 0.013 * floatAmt
       if (btnVolUpRef.current)   btnVolUpRef.current.position.y   += Math.sin(t * 0.58 + 0.9) * 0.011 * floatAmt
       if (btnVolDownRef.current) btnVolDownRef.current.position.y += Math.sin(t * 0.72 + 1.7) * 0.012 * floatAmt
       if (btnSilentRef.current)  btnSilentRef.current.position.y  += Math.sin(t * 0.55 + 3.1) * 0.010 * floatAmt
     }
 
-    // Screen glow — pulses with a living breath once fully revealed
-    // √3 frequency: irrational, never feels mechanical
+    // ── Screen glow — √3 Hz living pulse ─────────────────────────────────────
     const sg    = getScreenGlow(p)
     const pulse = sg > 0.4 ? Math.sin(t * 1.732) * 0.10 * ((sg - 0.4) / 0.6) : 0
     screenMat.emissiveIntensity = lerp(.35, 5.2, sg) * (1 + pulse)
@@ -333,122 +324,128 @@ export function PhoneModel({ progressRef }: Props) {
       screenLightRef.current.color.setHSL(lerp(0.62, 0.60, sg), 1, 0.6)
     }
 
-    // Screen reveal focus: non-screen elements subtly recede so the screen dominates.
-    // Perceptually this shifts attention without any visible "fade" — just focus.
+    // ── Screen reveal focus ───────────────────────────────────────────────────
     const revealFocus = easeOutExpo(mapRange(p, 0.87, 0.94, 0, 1))
     const focusDim    = lerp(1.0, 0.78, revealFocus)
-
-    const op = getPhoneOpacity(p)
+    const op          = getPhoneOpacity(p)
     if (op < 0.999 || revealFocus > 0) {
       titanium.opacity      = op * focusDim
-      frontGlassMat.opacity = Math.min(0.22, 0.22 * op * focusDim)
+      frontGlassMat.opacity = Math.min(0.58, 0.58 * op * focusDim)
       rearGlassMat.opacity  = op * focusDim
-      screenMat.opacity     = op                 // screen always at full opacity
+      screenMat.opacity     = op
     } else {
       titanium.opacity      = 1
-      frontGlassMat.opacity = 0.22
+      frontGlassMat.opacity = 0.58
       rearGlassMat.opacity  = 1
       screenMat.opacity     = 1
     }
   })
 
   const chipPos: [number, number][] = [
-    [-0.16, 0.14], [0.10, 0.13], [-0.16, -0.10], [0.06, -0.16], [0.18, -0.03],
+    [-0.15, 0.13], [0.10, 0.12], [-0.15, -0.09], [0.06, -0.15], [0.17, -0.02],
   ]
 
   return (
     <group ref={rootRef}>
       <pointLight ref={screenLightRef} color="#4466ff" intensity={0} distance={4} position={[0, 0, .3]} />
 
-      {/* FRAME */}
+      {/* ── TITANIUM FRAME ── */}
       <RoundedBox args={[W, H, D]} radius={CR} smoothness={8} castShadow receiveShadow>
         <primitive object={titanium} />
       </RoundedBox>
 
-      {/* OLED SCREEN */}
+      {/* ── OLED SCREEN ── */}
       <mesh ref={screenRef} castShadow>
         <planeGeometry args={[W * .87, H * .88]} />
         <primitive object={screenMat} />
       </mesh>
 
-      {/* FRONT GLASS */}
+      {/* ── CERAMIC SHIELD FRONT GLASS ── */}
       <mesh ref={frontGlassRef}>
         <planeGeometry args={[W * .994, H * .994]} />
         <primitive object={frontGlassMat} />
       </mesh>
 
-      {/* DYNAMIC ISLAND */}
+      {/* ── DYNAMIC ISLAND ── */}
       <group ref={islandRef}>
-        <RoundedBox args={[.24, .044, .007]} radius={.018} smoothness={4}>
-          <meshStandardMaterial color="#000003" roughness={0} metalness={0} />
+        <RoundedBox args={[.26, .048, .006]} radius={.020} smoothness={4}>
+          <meshStandardMaterial color="#000002" roughness={0.04} metalness={0.1} />
         </RoundedBox>
       </group>
 
-      {/* CAMERA MODULE */}
+      {/* ── CAMERA MODULE — iPhone 17 Pro Max triangular array ── */}
       <group ref={camModuleRef}>
-        <RoundedBox args={[.34, .34, .030]} radius={.068} smoothness={8}>
-          <meshPhysicalMaterial color="#18182a" metalness={.92} roughness={.07} envMapIntensity={2} />
+        <RoundedBox args={[.36, .36, .032]} radius={.072} smoothness={8}>
+          <meshPhysicalMaterial color="#131320" metalness={.95} roughness={.055} envMapIntensity={3} clearcoat={0.35} />
         </RoundedBox>
-        <LensUnit pos={[-.09, .08, .017]} outer={.058} inner={.044} />
-        <LensUnit pos={[ .08, .08, .017]} outer={.055} inner={.042} />
-        <LensUnit pos={[-.005,-.077,.017]} outer={.050} inner={.037} />
-        <mesh position={[.105,-.055,.016]}>
-          <circleGeometry args={[.014, 16]} />
-          <meshStandardMaterial color="#fffbf0" emissive="#ffe8a0" emissiveIntensity={.25} />
+        {/* Triangular lens arrangement */}
+        <LensUnit pos={[-.09,  .09, .018]} outer={.064} inner={.048} />
+        <LensUnit pos={[ .09,  .09, .018]} outer={.060} inner={.044} />
+        <LensUnit pos={[-.005,-.085,.018]} outer={.055} inner={.040} />
+        {/* LiDAR */}
+        <mesh position={[.105, -.060, .017]}>
+          <circleGeometry args={[.015, 16]} />
+          <meshStandardMaterial color="#e8e8f0" emissive="#dde0ff" emissiveIntensity={.20} roughness={0.15} />
+        </mesh>
+        {/* Flash */}
+        <mesh position={[.105, .062, .017]}>
+          <circleGeometry args={[.012, 16]} />
+          <meshStandardMaterial color="#fffdf2" emissive="#fff0c0" emissiveIntensity={.18} />
         </mesh>
       </group>
 
-      {/* BATTERY */}
+      {/* ── BATTERY — graphite, invisible until explosion ── */}
       <group ref={batteryRef}>
         <mesh>
-          <boxGeometry args={[.55, .90, .013]} />
-          <meshStandardMaterial color="#1a3c5c" metalness={.3} roughness={.7} />
+          <boxGeometry args={[.56, .88, .011]} />
+          <primitive object={batteryMat} />
         </mesh>
-        {[-0.13, 0.13].map((x, i) => (
-          <mesh key={i} position={[x, 0, .009]}>
-            <boxGeometry args={[.19, .83, .007]} />
-            <meshStandardMaterial color="#2a4e7a" emissive="#001144" emissiveIntensity={.18} />
-          </mesh>
-        ))}
+        {/* Battery terminal top */}
+        <mesh position={[0, .46, .008]}>
+          <boxGeometry args={[.18, .018, .006]} />
+          <primitive object={batteryMat} />
+        </mesh>
       </group>
 
-      {/* MOTHERBOARD */}
+      {/* ── MOTHERBOARD — dark PCB, invisible until explosion ── */}
       <group ref={mbRef}>
         <mesh>
-          <boxGeometry args={[.56, .66, .011]} />
-          <meshStandardMaterial color="#0b2b0b" roughness={.88} />
+          <boxGeometry args={[.56, .64, .010]} />
+          <primitive object={mbMat} />
         </mesh>
+        {/* Chips — same opacity controlled via chipMat */}
         {chipPos.map(([cx, cy], i) => (
           <mesh key={i} position={[cx, cy, .009]}>
-            <boxGeometry args={[.10, .085, .006]} />
-            <meshStandardMaterial color="#11112a" metalness={.7} roughness={.2} />
+            <boxGeometry args={[.094, .082, .005]} />
+            <primitive object={chipMat} />
           </mesh>
         ))}
-        <mesh position={[0, .22, .011]}>
-          <boxGeometry args={[.22, .22, .010]} />
-          <meshStandardMaterial color="#1a1a3e" metalness={.85} roughness={.1} emissive="#0000bb" emissiveIntensity={.08} />
+        {/* Main SoC — A18 Pro chip, center-upper area */}
+        <mesh position={[0, .20, .011]}>
+          <boxGeometry args={[.21, .21, .008]} />
+          <primitive object={chipMat} />
         </mesh>
       </group>
 
-      {/* SIDE BUTTONS */}
+      {/* ── SIDE BUTTONS ── */}
       <mesh ref={btnPowerRef}>
-        <boxGeometry args={[.013, .16, .026]} />
+        <boxGeometry args={[.012, .165, .028]} />
         <primitive object={titanium} />
       </mesh>
       <mesh ref={btnVolUpRef}>
-        <boxGeometry args={[.013, .13, .026]} />
+        <boxGeometry args={[.012, .135, .028]} />
         <primitive object={titanium} />
       </mesh>
       <mesh ref={btnVolDownRef}>
-        <boxGeometry args={[.013, .13, .026]} />
+        <boxGeometry args={[.012, .135, .028]} />
         <primitive object={titanium} />
       </mesh>
       <mesh ref={btnSilentRef}>
-        <boxGeometry args={[.013, .09, .022]} />
+        <boxGeometry args={[.012, .092, .024]} />
         <primitive object={titanium} />
       </mesh>
 
-      {/* REAR GLASS */}
+      {/* ── REAR GLASS ── */}
       <mesh ref={rearGlassRef} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[W * .994, H * .994]} />
         <primitive object={rearGlassMat} />
@@ -457,7 +454,7 @@ export function PhoneModel({ progressRef }: Props) {
   )
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── LensUnit ─────────────────────────────────────────────────────────────────
 
 function LensUnit({ pos, outer, inner }: {
   pos: [number, number, number]; outer: number; inner: number
@@ -465,19 +462,19 @@ function LensUnit({ pos, outer, inner }: {
   return (
     <group position={pos}>
       <mesh>
-        <ringGeometry args={[inner, outer, 48]} />
-        <meshPhysicalMaterial color="#3a3a4c" metalness={.92} roughness={.05} />
+        <ringGeometry args={[inner, outer, 64]} />
+        <meshPhysicalMaterial color="#28283a" metalness={.96} roughness={.038} clearcoat={0.9} />
       </mesh>
       <mesh position={[0, 0, .001]}>
-        <circleGeometry args={[inner * .98, 48]} />
+        <circleGeometry args={[inner * .98, 64]} />
         <meshPhysicalMaterial
-          color="#020215" transmission={.12} roughness={0} ior={1.72}
-          thickness={.08} envMapIntensity={5}
+          color="#010210" transmission={.15} roughness={0} ior={1.76}
+          thickness={.10} envMapIntensity={6}
         />
       </mesh>
-      <mesh position={[inner * -.3, inner * .3, .002]}>
-        <circleGeometry args={[inner * .25, 16]} />
-        <meshBasicMaterial color="#5577cc" transparent opacity={.18} />
+      <mesh position={[inner * -.28, inner * .28, .002]}>
+        <circleGeometry args={[inner * .22, 16]} />
+        <meshBasicMaterial color="#5566cc" transparent opacity={.15} />
       </mesh>
     </group>
   )
