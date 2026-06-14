@@ -145,8 +145,8 @@ export function TestimonialsSection() {
             <m.div
               key={t.nameEn}
               variants={i === 0 ? fadeLeft : fadeRight}
-              whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-              className="group relative bg-gradient-to-br from-[#1C0E04] to-[#130B03] border border-[#C4922A]/15 rounded-2xl p-8 hover:border-[#C4922A]/35 transition-all duration-300 overflow-hidden cursor-default"
+              whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.16,1,0.3,1] } }}
+              className="group card-shimmer glass-card relative rounded-2xl p-8 overflow-hidden cursor-default"
             >
               {/* Glow */}
               <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/8 blur-3xl transition-all duration-500 pointer-events-none" />
@@ -198,7 +198,7 @@ export function TestimonialsSection() {
               key={t.nameEn}
               variants={scaleIn}
               whileHover={{ y: -5, transition: { duration: 0.25, ease: 'easeOut' } }}
-              className="group relative bg-[#130B03] border border-white/[0.05] rounded-2xl p-6 hover:border-[#C4922A]/20 hover:bg-[#1C0E04] transition-all duration-300 overflow-hidden cursor-default"
+              className="group card-shimmer glass-card relative rounded-2xl p-6 overflow-hidden cursor-default"
             >
               <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/6 blur-2xl transition-all duration-500 pointer-events-none" />
 

@@ -281,55 +281,41 @@ export function HeroSection() {
             animate="show"
             className="flex flex-col justify-center order-2 lg:order-1"
           >
-            {/* Badge */}
+            {/* Eyebrow badge */}
             <m.div
               variants={snapIn}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold mb-6 w-fit"
+              className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-medium mb-7 w-fit cursor-default"
               style={{
-                background: 'rgba(196,146,42,0.10)',
-                border: '1px solid rgba(196,146,42,0.28)',
-                color: '#C4922A',
+                background: 'rgba(196,146,42,0.08)',
+                border: '1px solid rgba(196,146,42,0.22)',
+                color: 'rgba(196,146,42,0.9)',
               }}
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              {lang === 'en'
-                ? "UAE's Premier B2B Mobile Trading"
-                : 'الشركة الأولى في الإمارات لتجارة الجملة'}
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C4922A] animate-pulse" />
+              {lang === 'en' ? "Dubai's #1 B2B Mobile Wholesale" : 'الأول في الإمارات لتجارة الجملة'}
             </m.div>
 
-            {/* Headline — enlarged for impact */}
+            {/* Headline — Bodoni Moda luxury serif */}
             <m.h1
               variants={revealHeavy}
-              className="text-[3rem] sm:text-[3.8rem] lg:text-[4.6rem] font-black text-white leading-[1.03] tracking-tight mb-5"
+              className="font-display text-[2.9rem] sm:text-[3.8rem] lg:text-[5rem] font-bold text-white leading-[1.02] mb-6"
+              style={{ letterSpacing: '-0.03em' }}
             >
               {lang === 'en' ? (
                 <>
-                  Your Trusted Source
+                  The Trusted
                   <br />
-                  for{' '}
-                  <span style={{
-                    background: 'linear-gradient(135deg, #D4A840 0%, #C4922A 45%, #8B6015 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    Wholesale
-                  </span>
-                  <br />Mobile Devices
+                  <em className="not-italic gold-text">Wholesale</em> Source
+                  <br />
+                  <span className="text-gray-400 font-normal text-[0.6em]">for Mobile Devices</span>
                 </>
               ) : (
                 <>
-                  مصدرك الموثوق
+                  المورد الموثوق
                   <br />
-                  <span style={{
-                    background: 'linear-gradient(135deg, #D4A840 0%, #C4922A 45%, #8B6015 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    لجملة
-                  </span>
-                  {' '}الأجهزة المحمولة
+                  <em className="not-italic gold-text">للجملة</em>
+                  <br />
+                  <span className="text-gray-400 font-normal text-[0.6em]">للأجهزة المحمولة</span>
                 </>
               )}
             </m.h1>
@@ -337,84 +323,62 @@ export function HeroSection() {
             {/* Subtitle */}
             <m.p
               variants={fadeUp}
-              className="text-sm sm:text-base text-gray-400 max-w-lg mb-8 leading-relaxed"
+              className="text-[15px] text-gray-400 max-w-md mb-9 leading-[1.75]"
             >
               {lang === 'en'
-                ? 'Supplying genuine smartphones, accessories & spare parts across the GCC. Competitive wholesale pricing, flexible MOQ, and fast delivery from Dubai.'
-                : 'نوفر هواتف وإكسسوارات وقطع غيار أصلية عبر دول الخليج. أسعار جملة تنافسية، كميات مرنة، وتوصيل سريع من دبي.'}
+                ? 'Genuine smartphones, accessories & spare parts across the GCC. Competitive pricing, flexible MOQ — shipped from Dubai worldwide.'
+                : 'هواتف وإكسسوارات وقطع غيار أصلية عبر الخليج. أسعار تنافسية وكميات مرنة — شحن من دبي لكل العالم.'}
             </m.p>
 
             {/* CTAs */}
             <m.div
               variants={fadeUp}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-9"
             >
               <m.button
-                whileHover={{ scale: 1.03, y: -2 }}
+                whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => scrollTo('contact')}
-                className="group w-full sm:w-auto flex items-center justify-center gap-2.5 px-8 py-4 font-bold text-base rounded-xl transition-shadow duration-300 cursor-pointer"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A840 0%, #C4922A 100%)',
-                  color: '#0A0705',
-                  boxShadow: '0 6px 28px rgba(196,146,42,0.28)',
-                }}
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-bold text-sm rounded-xl btn-bronze cursor-pointer"
               >
                 {lang === 'en' ? 'Request a Quote' : 'طلب عرض سعر'}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
               </m.button>
 
               <m.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => scrollTo('products')}
-                className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-8 py-4 bg-white/[0.04] backdrop-blur-sm border border-white/10 text-white font-semibold text-base rounded-xl hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 btn-ghost-bronze text-sm font-semibold rounded-xl cursor-pointer"
               >
                 {lang === 'en' ? 'Browse Catalog' : 'تصفح الكتالوج'}
               </m.button>
             </m.div>
 
-            {/* Trust row — compact single line */}
-            <m.div
-              variants={fadeUp}
-              className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-8"
-            >
-              {TRUST.map(({ icon: Icon, en, ar }, i) => (
-                <div key={en} className="flex items-center gap-1.5 text-xs text-gray-500">
-                  {i > 0 && <span className="text-gray-700 select-none">·</span>}
-                  <Icon className="w-3 h-3 text-[#C4922A]" />
+            {/* Trust pills */}
+            <m.div variants={fadeUp} className="flex flex-wrap items-center gap-2 mb-9">
+              {TRUST.map(({ icon: Icon, en, ar }) => (
+                <div
+                  key={en}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-gray-500 border border-white/[0.06] bg-white/[0.02] cursor-default"
+                >
+                  <Icon className="w-3 h-3 text-[#C4922A]/70 shrink-0" />
                   {lang === 'en' ? en : ar}
                 </div>
               ))}
             </m.div>
 
-            {/* Stats grid */}
-            <m.div
-              variants={fadeUp}
-              className="grid grid-cols-4 gap-px rounded-2xl overflow-hidden"
-              style={{
-                background: 'rgba(196,146,42,0.10)',
-                border: '1px solid rgba(196,146,42,0.14)',
-              }}
-            >
-              {STATS.map(({ value, suffix, en, ar }) => (
+            {/* Stats — minimal elegant row */}
+            <m.div variants={fadeUp} className="grid grid-cols-4 gap-0">
+              {STATS.map(({ value, suffix, en, ar }, i) => (
                 <div
                   key={en}
-                  className="px-3 py-4 text-center transition-colors duration-200"
-                  style={{ background: '#0A0705' }}
+                  className={`py-4 text-center ${i < 3 ? 'border-r border-white/[0.06]' : ''}`}
                 >
-                  <div
-                    className="text-xl sm:text-2xl font-black mb-0.5"
-                    style={{
-                      background: 'linear-gradient(135deg, #D4A840, #C4922A)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    <CountUp end={value} suffix={suffix} duration={2} />
+                  <div className="font-display text-2xl sm:text-3xl font-bold gold-text leading-none mb-1.5">
+                    <CountUp end={value} suffix={suffix} duration={2.2} />
                   </div>
-                  <div className="text-[10px] text-gray-600">
+                  <div className="text-[11px] text-gray-600 font-medium tracking-wide uppercase">
                     {lang === 'en' ? en : ar}
                   </div>
                 </div>

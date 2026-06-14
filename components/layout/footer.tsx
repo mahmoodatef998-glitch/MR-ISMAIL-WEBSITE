@@ -27,7 +27,10 @@ export function Footer() {
 
   return (
     <>
-      <footer className="bg-[#080503] border-t border-[#C4922A]/10">
+      <footer className="relative bg-[#080503] border-t border-[#C4922A]/10 overflow-hidden">
+        {/* Subtle footer glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-[#C4922A]/30 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-40 bg-[#C4922A]/3 blur-[80px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
           <m.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"

@@ -79,19 +79,20 @@ export function FeaturesSection() {
               <m.div
                 key={i}
                 variants={fadeUp}
-                whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-                className="group card-shimmer relative bg-[#130B03] border border-white/[0.05] rounded-2xl p-7 hover:border-[#C4922A]/25 hover:bg-[#1C0E04] transition-colors duration-300 overflow-hidden"
+                whileHover={{ y: -5, transition: { duration: 0.3, ease: [0.16,1,0.3,1] } }}
+                className="group card-shimmer glass-card relative rounded-2xl p-7 overflow-hidden cursor-default"
               >
-                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/6 blur-2xl transition-all duration-500" />
+                {/* Corner glow */}
+                <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/8 blur-3xl transition-all duration-700 pointer-events-none" />
                 <div className="relative">
                   <m.div
-                    whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-                    className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#C4922A]/10 border border-[#C4922A]/15 mb-5 group-hover:bg-[#C4922A]/15 group-hover:border-[#C4922A]/30 transition-all duration-300"
+                    whileHover={{ rotate: [0, -6, 6, 0], transition: { duration: 0.5 } }}
+                    className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#C4922A]/10 border border-[#C4922A]/18 mb-5 group-hover:border-[#C4922A]/35 transition-all duration-300"
                   >
                     <Icon className="w-5 h-5 text-[#C4922A]" />
                   </m.div>
-                  <h3 className="text-white font-bold text-base mb-2.5 group-hover:text-[#C4922A] transition-colors duration-200">{content.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{content.desc}</p>
+                  <h3 className="font-display text-white font-semibold text-base mb-2.5 group-hover:text-[#D4A840] transition-colors duration-250">{content.title}</h3>
+                  <p className="text-gray-500 text-[13.5px] leading-relaxed">{content.desc}</p>
                 </div>
               </m.div>
             )

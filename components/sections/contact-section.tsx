@@ -120,7 +120,7 @@ export function ContactSection() {
                   key={c.label}
                   variants={fadeLeft}
                   whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                  className="flex items-start gap-4 bg-[#130B03] border border-white/[0.05] rounded-2xl p-5 hover:border-[#C4922A]/20 transition-colors duration-300"
+                  className="flex items-start gap-4 glass-card rounded-2xl p-5 cursor-default"
                 >
                   <div className="shrink-0 w-10 h-10 rounded-xl bg-[#C4922A]/10 border border-[#C4922A]/15 flex items-center justify-center">
                     <Icon className="w-4 h-4 text-[#C4922A]" />
@@ -165,7 +165,7 @@ export function ContactSection() {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 22 } }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="h-full flex items-center justify-center bg-[#130B03] border border-[#C4922A]/20 rounded-2xl p-12 text-center"
+                  className="h-full flex items-center justify-center glass-card rounded-2xl p-12 text-center"
                 >
                   <div>
                     <m.div
@@ -200,7 +200,7 @@ export function ContactSection() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onSubmit={handleSubmit}
-                  className="bg-[#130B03] border border-white/[0.05] rounded-2xl p-7 space-y-4"
+                  className="glass-card rounded-2xl p-7 space-y-4"
                 >
                   {/* Row 1 */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -212,7 +212,7 @@ export function ContactSection() {
                         required
                         value={form.name}
                         onChange={(e) => set('name', e.target.value)}
-                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                         placeholder={lang === 'en' ? 'John Smith' : 'محمد أحمد'}
                       />
                     </div>
@@ -224,7 +224,7 @@ export function ContactSection() {
                         required
                         value={form.company}
                         onChange={(e) => set('company', e.target.value)}
-                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                         placeholder={lang === 'en' ? 'Your Company LLC' : 'شركتك ذ.م.م'}
                       />
                     </div>
@@ -241,7 +241,7 @@ export function ContactSection() {
                         type="email"
                         value={form.email}
                         onChange={(e) => set('email', e.target.value)}
-                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                         placeholder="you@company.com"
                       />
                     </div>
@@ -253,7 +253,7 @@ export function ContactSection() {
                         required
                         value={form.phone}
                         onChange={(e) => set('phone', e.target.value)}
-                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                         placeholder="+971 50 000 0000"
                       />
                     </div>
@@ -282,7 +282,7 @@ export function ContactSection() {
                       <input
                         value={form.product}
                         onChange={(e) => set('product', e.target.value)}
-                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                         placeholder={lang === 'en' ? 'e.g. Samsung Galaxy S25' : 'مثال: سامسونج S25'}
                       />
                     </div>
@@ -296,7 +296,7 @@ export function ContactSection() {
                     <input
                       value={form.quantity}
                       onChange={(e) => set('quantity', e.target.value)}
-                      className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
+                      className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200"
                       placeholder={lang === 'en' ? 'e.g. 500 units' : 'مثال: 500 وحدة'}
                     />
                   </div>
@@ -310,7 +310,7 @@ export function ContactSection() {
                       rows={3}
                       value={form.message}
                       onChange={(e) => set('message', e.target.value)}
-                      className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all resize-none"
+                      className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600/60 focus:outline-none focus:border-[#C4922A]/35 focus:bg-[#C4922A]/[0.04] transition-all duration-200 resize-none"
                       placeholder={lang === 'en' ? 'Specifications, target price, delivery timeline…' : 'المواصفات، السعر المستهدف، جدول التسليم…'}
                     />
                   </div>
@@ -320,7 +320,7 @@ export function ContactSection() {
                     disabled={loading}
                     whileHover={loading ? {} : { scale: 1.02, y: -1 }}
                     whileTap={loading ? {} : { scale: 0.98 }}
-                    className="w-full flex items-center justify-center gap-2.5 py-4 bg-gradient-to-r from-[#C4922A] to-[#D4A840] text-[#080503] font-bold text-sm rounded-xl hover:shadow-2xl hover:shadow-[#C4922A]/25 disabled:opacity-60 disabled:cursor-not-allowed transition-shadow duration-300"
+                    className="w-full flex items-center justify-center gap-2.5 py-4 btn-bronze font-bold text-sm rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {loading ? (
                       <span className="w-4 h-4 border-2 border-[#050b18]/30 border-t-[#050b18] rounded-full animate-spin" />

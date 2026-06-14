@@ -1,17 +1,24 @@
 import type { Metadata } from 'next'
-import { Inter, Syne } from 'next/font/google'
+import { Bodoni_Moda, Jost } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/hooks/use-language'
 import { Toaster } from '@/components/ui/toaster'
 import { MotionProvider } from '@/components/providers/motion-provider'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-
-// Syne — geometric display face for headlines, carries the brand's architectural character
-const syne = Syne({
+// Bodoni Moda — luxury serif display, high-contrast elegance matching the handcrafted bronze coin identity
+const bodoniModa = Bodoni_Moda({
   subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-syne',
+  weight: ['400', '500', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+// Jost — geometric sans for body text, UI, navigation — refined and clean
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
   display: 'swap',
 })
 
@@ -50,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${inter.variable} ${syne.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`${bodoniModa.variable} ${jost.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <LanguageProvider>
           <MotionProvider>
             {children}
