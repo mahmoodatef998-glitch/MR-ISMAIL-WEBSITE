@@ -1,11 +1,19 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Syne } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/hooks/use-language'
 import { Toaster } from '@/components/ui/toaster'
 import { MotionProvider } from '@/components/providers/motion-provider'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+
+// Syne — geometric display face for headlines, carries the brand's architectural character
+const syne = Syne({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-syne',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -40,8 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} ${syne.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <LanguageProvider>
           <MotionProvider>
             {children}
