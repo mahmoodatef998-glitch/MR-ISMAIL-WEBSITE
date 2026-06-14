@@ -73,7 +73,7 @@ export function ContactSection() {
   ]
 
   return (
-    <section id="contact" className="py-24 bg-[#030810]">
+    <section id="contact" className="py-24 bg-[#080503]">
       <div className="section-divider mb-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
@@ -86,7 +86,7 @@ export function ContactSection() {
           whileInView="show"
           viewport={viewportOnce}
         >
-          <m.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+          <m.p variants={fadeUp} className="text-[#C4922A] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
             {lang === 'en' ? 'Get In Touch' : 'تواصل معنا'}
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
@@ -120,10 +120,10 @@ export function ContactSection() {
                   key={c.label}
                   variants={fadeLeft}
                   whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                  className="flex items-start gap-4 bg-[#0a1628] border border-white/[0.05] rounded-2xl p-5 hover:border-[#c8a96e]/20 transition-colors duration-300"
+                  className="flex items-start gap-4 bg-[#130B03] border border-white/[0.05] rounded-2xl p-5 hover:border-[#C4922A]/20 transition-colors duration-300"
                 >
-                  <div className="shrink-0 w-10 h-10 rounded-xl bg-[#c8a96e]/10 border border-[#c8a96e]/15 flex items-center justify-center">
-                    <Icon className="w-4 h-4 text-[#c8a96e]" />
+                  <div className="shrink-0 w-10 h-10 rounded-xl bg-[#C4922A]/10 border border-[#C4922A]/15 flex items-center justify-center">
+                    <Icon className="w-4 h-4 text-[#C4922A]" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-0.5">{c.label}</p>
@@ -165,15 +165,15 @@ export function ContactSection() {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 22 } }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="h-full flex items-center justify-center bg-[#0a1628] border border-[#c8a96e]/20 rounded-2xl p-12 text-center"
+                  className="h-full flex items-center justify-center bg-[#130B03] border border-[#C4922A]/20 rounded-2xl p-12 text-center"
                 >
                   <div>
                     <m.div
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 400, damping: 18, delay: 0.1 } }}
-                      className="w-16 h-16 rounded-full bg-[#c8a96e]/10 border border-[#c8a96e]/25 flex items-center justify-center mx-auto mb-5"
+                      className="w-16 h-16 rounded-full bg-[#C4922A]/10 border border-[#C4922A]/25 flex items-center justify-center mx-auto mb-5"
                     >
-                      <CheckCircle className="w-8 h-8 text-[#c8a96e]" />
+                      <CheckCircle className="w-8 h-8 text-[#C4922A]" />
                     </m.div>
                     <m.h3
                       initial={{ opacity: 0, y: 12 }}
@@ -200,7 +200,7 @@ export function ContactSection() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onSubmit={handleSubmit}
-                  className="bg-[#0a1628] border border-white/[0.05] rounded-2xl p-7 space-y-4"
+                  className="bg-[#130B03] border border-white/[0.05] rounded-2xl p-7 space-y-4"
                 >
                   {/* Row 1 */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -212,7 +212,7 @@ export function ContactSection() {
                         required
                         value={form.name}
                         onChange={(e) => set('name', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                         placeholder={lang === 'en' ? 'John Smith' : 'محمد أحمد'}
                       />
                     </div>
@@ -224,7 +224,7 @@ export function ContactSection() {
                         required
                         value={form.company}
                         onChange={(e) => set('company', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                         placeholder={lang === 'en' ? 'Your Company LLC' : 'شركتك ذ.م.م'}
                       />
                     </div>
@@ -241,7 +241,7 @@ export function ContactSection() {
                         type="email"
                         value={form.email}
                         onChange={(e) => set('email', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                         placeholder="you@company.com"
                       />
                     </div>
@@ -253,7 +253,7 @@ export function ContactSection() {
                         required
                         value={form.phone}
                         onChange={(e) => set('phone', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                         placeholder="+971 50 000 0000"
                       />
                     </div>
@@ -269,7 +269,7 @@ export function ContactSection() {
                         required
                         value={form.country}
                         onChange={(e) => set('country', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all appearance-none"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all appearance-none"
                       >
                         <option value="" disabled>{lang === 'en' ? 'Select Country' : 'اختر الدولة'}</option>
                         {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -282,7 +282,7 @@ export function ContactSection() {
                       <input
                         value={form.product}
                         onChange={(e) => set('product', e.target.value)}
-                        className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                        className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                         placeholder={lang === 'en' ? 'e.g. Samsung Galaxy S25' : 'مثال: سامسونج S25'}
                       />
                     </div>
@@ -296,7 +296,7 @@ export function ContactSection() {
                     <input
                       value={form.quantity}
                       onChange={(e) => set('quantity', e.target.value)}
-                      className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all"
+                      className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all"
                       placeholder={lang === 'en' ? 'e.g. 500 units' : 'مثال: 500 وحدة'}
                     />
                   </div>
@@ -310,7 +310,7 @@ export function ContactSection() {
                       rows={3}
                       value={form.message}
                       onChange={(e) => set('message', e.target.value)}
-                      className="w-full bg-[#050b18] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#c8a96e]/40 focus:bg-[#0d1e36] transition-all resize-none"
+                      className="w-full bg-[#080503] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#C4922A]/40 focus:bg-[#1C0E04] transition-all resize-none"
                       placeholder={lang === 'en' ? 'Specifications, target price, delivery timeline…' : 'المواصفات، السعر المستهدف، جدول التسليم…'}
                     />
                   </div>
@@ -320,7 +320,7 @@ export function ContactSection() {
                     disabled={loading}
                     whileHover={loading ? {} : { scale: 1.02, y: -1 }}
                     whileTap={loading ? {} : { scale: 0.98 }}
-                    className="w-full flex items-center justify-center gap-2.5 py-4 bg-gradient-to-r from-[#c8a96e] to-[#e8c97a] text-[#050b18] font-bold text-sm rounded-xl hover:shadow-2xl hover:shadow-[#c8a96e]/25 disabled:opacity-60 disabled:cursor-not-allowed transition-shadow duration-300"
+                    className="w-full flex items-center justify-center gap-2.5 py-4 bg-gradient-to-r from-[#C4922A] to-[#D4A840] text-[#080503] font-bold text-sm rounded-xl hover:shadow-2xl hover:shadow-[#C4922A]/25 disabled:opacity-60 disabled:cursor-not-allowed transition-shadow duration-300"
                   >
                     {loading ? (
                       <span className="w-4 h-4 border-2 border-[#050b18]/30 border-t-[#050b18] rounded-full animate-spin" />
