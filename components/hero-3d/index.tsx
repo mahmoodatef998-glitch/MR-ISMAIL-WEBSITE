@@ -9,7 +9,7 @@ const PhoneCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-screen bg-[#000005] flex items-center justify-center">
+      <div className="w-full h-screen bg-[#0A0705] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 rounded-full border-2 border-[#c8a96e]/30 border-t-[#c8a96e] animate-spin" />
           <span className="text-[#c8a96e]/60 text-[10px] uppercase tracking-[0.35em]">
@@ -86,7 +86,7 @@ export function Hero3D() {
             const t = (p - 0.93) / 0.04
             const intensity = Math.sin(t * Math.PI) * 0.7
             flashRef.current.style.background =
-              `rgba(40,60,255,${(intensity * 0.4).toFixed(3)})`
+              `rgba(196,146,42,${(intensity * 0.4).toFixed(3)})`
             flashRef.current.style.display = 'block'
           } else {
             flashRef.current.style.display = 'none'
@@ -119,7 +119,7 @@ export function Hero3D() {
 
   return (
     <div id="home" ref={containerRef} className="relative" style={{ height: '750vh' }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#000005]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#0A0705]">
         <div className="absolute inset-0">
           <PhoneCanvas progressRef={progressRef} />
         </div>

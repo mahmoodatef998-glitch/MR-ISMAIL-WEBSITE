@@ -34,8 +34,8 @@ export function PhoneCanvas({ progressRef }: Props) {
       }}
       className="!bg-transparent"
     >
-      <color attach="background" args={['#01071e']} />
-      <fog attach="fog" args={['#010918', 16, 42]} />
+      <color attach="background" args={['#0A0705']} />
+      <fog attach="fog" args={['#0A0705', 16, 42]} />
 
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />

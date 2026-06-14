@@ -63,7 +63,7 @@
 [dir="rtl"] .ltr-only { direction: ltr; }
 
 /* ── Base UX ───────────────────────────────────────── */
-html { scroll-behavior: smooth; }
+/* scroll-behavior: smooth intentionally removed — Lenis smooth scroll handles this */
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
