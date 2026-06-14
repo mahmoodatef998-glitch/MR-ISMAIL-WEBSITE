@@ -96,7 +96,12 @@ html { scroll-behavior: smooth; }
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-.animate-marquee { animation: marquee 30s linear infinite; }
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.animate-marquee { animation: marquee 35s linear infinite; }
+.animate-marquee-reverse { animation: marquee-reverse 35s linear infinite; }
 
 /* Skeleton */
 @keyframes skeleton-loading {
@@ -122,6 +127,10 @@ html { scroll-behavior: smooth; }
 .line-clamp-3 {
   overflow: hidden; display: -webkit-box;
   -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+}
+.line-clamp-4 {
+  overflow: hidden; display: -webkit-box;
+  -webkit-box-orient: vertical; -webkit-line-clamp: 4;
 }
 
 /* Section divider */

@@ -4,6 +4,7 @@ import { ProductsSection } from '@/components/sections/products-section'
 import { FeaturesSection } from '@/components/sections/features-section'
 import { AboutSection } from '@/components/sections/about-section'
 import { ProcessSection } from '@/components/sections/process-section'
+import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { ContactSection } from '@/components/sections/contact-section'
 import { prisma } from '@/lib/db'
 import { Product, ProductSpec } from '@/types'
@@ -40,6 +41,7 @@ export default async function HomePage() {
       <FeaturesSection />
       <AboutSection />
       <ProcessSection />
+      <TestimonialsSection />
       <ContactSection />
     </>
   )
