@@ -121,9 +121,9 @@ export function TestimonialsSection() {
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
             {lang === 'en' ? (
-              <>Trusted by Buyers<br /><span className="gold-text">Across 30+ Countries</span></>
+              <>Trusted by Buyers<br /><span className="text-white opacity-70">Across 30+ Countries</span></>
             ) : (
-              <>موثوق به من مشترين<br /><span className="gold-text">في أكثر من 30 دولة</span></>
+              <>موثوق به من مشترين<br /><span className="text-white opacity-70">في أكثر من 30 دولة</span></>
             )}
           </m.h2>
           <m.p variants={fadeUp} className="text-gray-500 text-sm leading-relaxed">

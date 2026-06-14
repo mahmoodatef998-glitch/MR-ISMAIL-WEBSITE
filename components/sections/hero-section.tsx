@@ -5,7 +5,7 @@ import { useLanguage } from '@/hooks/use-language'
 import { ArrowRight, Shield, Zap, Globe, PhoneCall, Sparkles } from 'lucide-react'
 import { m, useScroll, useTransform, MotionValue } from 'framer-motion'
 import { CountUp } from '@/components/ui/count-up'
-import { fadeUp, stagger } from '@/lib/motion'
+import { fadeUp, stagger, revealHeavy, snapIn } from '@/lib/motion'
 
 // ── Bronze palette (matches logo) ──────────────────────────────
 const BL  = '#D4A840'  // light highlight
@@ -26,15 +26,17 @@ function AnimatedCamel({ progress }: { progress: MotionValue<number> }) {
   const frAngle   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N + Math.PI) * 24)
   const blAngle   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N + Math.PI) * 20)
   const brAngle   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N)           * 20)
-  const bodyBob   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N * 2)       *  3)
+  const bodyBob   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N * 2)       *  4)
   const headNod   = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N * 0.9)     *  6)
   const tailSwing = useTransform(progress, (v) => Math.sin(v * Math.PI * 2 * N * 0.7)     * 16)
+  // Walk forward: camel enters from right edge and settles into frame
+  const walkX     = useTransform(progress, [0, 0.35, 1], [60, 0, -18])
 
   return (
     <m.svg
       viewBox="0 0 560 410"
       className="w-full h-full"
-      style={{ y: bodyBob }}
+      style={{ y: bodyBob, x: walkX }}
       aria-hidden="true"
     >
       <defs>
@@ -278,8 +280,8 @@ export function HeroSection() {
           >
             {/* Badge */}
             <m.div
-              variants={fadeUp}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs sm:text-sm font-semibold mb-7 w-fit"
+              variants={snapIn}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold mb-6 w-fit"
               style={{
                 background: 'rgba(196,146,42,0.10)',
                 border: '1px solid rgba(196,146,42,0.28)',
@@ -292,15 +294,15 @@ export function HeroSection() {
                 : 'الشركة الأولى في الإمارات لتجارة الجملة'}
             </m.div>
 
-            {/* Headline */}
+            {/* Headline — enlarged for impact */}
             <m.h1
-              variants={fadeUp}
-              className="text-[2.6rem] sm:text-5xl lg:text-[3.4rem] font-black text-white leading-[1.06] tracking-tight mb-5"
+              variants={revealHeavy}
+              className="text-[3rem] sm:text-[3.8rem] lg:text-[4.6rem] font-black text-white leading-[1.03] tracking-tight mb-5"
             >
               {lang === 'en' ? (
                 <>
-                  Your Trusted Source{' '}
-                  <br className="hidden sm:block" />
+                  Your Trusted Source
+                  <br />
                   for{' '}
                   <span style={{
                     background: 'linear-gradient(135deg, #D4A840 0%, #C4922A 45%, #8B6015 100%)',
@@ -332,7 +334,7 @@ export function HeroSection() {
             {/* Subtitle */}
             <m.p
               variants={fadeUp}
-              className="text-sm sm:text-base text-gray-400 max-w-lg mb-9 leading-relaxed"
+              className="text-sm sm:text-base text-gray-400 max-w-lg mb-8 leading-relaxed"
             >
               {lang === 'en'
                 ? 'Supplying genuine smartphones, accessories & spare parts across the GCC. Competitive wholesale pricing, flexible MOQ, and fast delivery from Dubai.'
@@ -369,28 +371,17 @@ export function HeroSection() {
               </m.button>
             </m.div>
 
-            {/* Trust badges */}
+            {/* Trust row — compact single line */}
             <m.div
-              variants={stagger(0, 0.08)}
-              className="flex flex-wrap items-center gap-4 mb-10"
+              variants={fadeUp}
+              className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-8"
             >
-              {TRUST.map(({ icon: Icon, en, ar }) => (
-                <m.div
-                  key={en}
-                  variants={fadeUp}
-                  className="flex items-center gap-2 text-sm text-gray-500"
-                >
-                  <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                    style={{
-                      background: 'rgba(196,146,42,0.10)',
-                      border: '1px solid rgba(196,146,42,0.18)',
-                    }}
-                  >
-                    <Icon className="w-3.5 h-3.5" style={{ color: '#C4922A' }} />
-                  </div>
+              {TRUST.map(({ icon: Icon, en, ar }, i) => (
+                <div key={en} className="flex items-center gap-1.5 text-xs text-gray-500">
+                  {i > 0 && <span className="text-gray-700 select-none">·</span>}
+                  <Icon className="w-3 h-3 text-[#C4922A]" />
                   {lang === 'en' ? en : ar}
-                </m.div>
+                </div>
               ))}
             </m.div>
 

@@ -58,7 +58,7 @@ export function FeaturesSection() {
             {lang === 'en' ? 'Why Choose Us' : 'لماذا تختارنا'}
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
-            {lang === 'en' ? (<>Built for Businesses<br /><span className="gold-text">That Demand More</span></>) : (<>مبني للشركات التي<br /><span className="gold-text">تطلب الأفضل</span></>)}
+            {lang === 'en' ? (<>Built for Businesses<br /><span className="text-white opacity-70">That Demand More</span></>) : (<>مبني للشركات التي<br /><span className="text-white opacity-70">تطلب الأفضل</span></>)}
           </m.h2>
           <m.p variants={fadeUp} className="text-gray-500 text-sm leading-relaxed">
             {lang === 'en' ? 'Fifteen years of wholesale experience distilled into a supply chain that just works.' : 'خمسة عشر عامًا من الخبرة في الجملة تتجلى في سلسلة توريد تعمل بكفاءة.'}

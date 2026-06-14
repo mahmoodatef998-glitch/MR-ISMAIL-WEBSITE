@@ -45,9 +45,9 @@ export function ProcessSection() {
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
             {lang === 'en' ? (
-              <>Order in<br /><span className="gold-text">3 Simple Steps</span></>
+              <>Order in<br /><span className="text-white opacity-70">3 Simple Steps</span></>
             ) : (
-              <>اطلب في<br /><span className="gold-text">3 خطوات بسيطة</span></>
+              <>اطلب في<br /><span className="text-white opacity-70">3 خطوات بسيطة</span></>
             )}
           </m.h2>
         </m.div>

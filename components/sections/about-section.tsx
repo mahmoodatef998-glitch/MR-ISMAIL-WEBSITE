@@ -40,7 +40,7 @@ export function AboutSection() {
               {lang === 'en' ? 'About Us' : 'من نحن'}
             </m.p>
             <m.h2 variants={fadeLeft} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
-              {lang === 'en' ? (<>Trusted by Businesses<br /><span className="gold-text">Across the Globe</span></>) : (<>موثوق به من قِبَل الشركات<br /><span className="gold-text">حول العالم</span></>)}
+              {lang === 'en' ? (<>Trusted by Businesses<br /><span className="text-white opacity-70">Across the Globe</span></>) : (<>موثوق به من قِبَل الشركات<br /><span className="text-white opacity-70">حول العالم</span></>)}
             </m.h2>
             <m.p variants={fadeLeft} className="text-gray-400 leading-relaxed mb-6">
               {lang === 'en'

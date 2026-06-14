@@ -36,9 +36,9 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <BrandsStrip />
       <ProductsSection products={products} />
       <FeaturesSection />
+      <BrandsStrip />
       <AboutSection />
       <ProcessSection />
       <TestimonialsSection />
