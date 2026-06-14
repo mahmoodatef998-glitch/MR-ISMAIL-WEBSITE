@@ -42,7 +42,7 @@ export function FeaturesSection() {
   const { lang } = useLanguage()
 
   return (
-    <section id="features" className="py-24 bg-[#030810]">
+    <section id="features" className="py-24 bg-[#080503]">
       <div className="section-divider mb-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
@@ -54,7 +54,7 @@ export function FeaturesSection() {
           whileInView="show"
           viewport={viewportOnce}
         >
-          <m.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+          <m.p variants={fadeUp} className="text-[#C4922A] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
             {lang === 'en' ? 'Why Choose Us' : 'لماذا تختارنا'}
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
@@ -80,17 +80,17 @@ export function FeaturesSection() {
                 key={i}
                 variants={fadeUp}
                 whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-                className="group card-shimmer relative bg-[#0a1628] border border-white/[0.05] rounded-2xl p-7 hover:border-[#c8a96e]/25 hover:bg-[#0d1e36] transition-colors duration-300 overflow-hidden"
+                className="group card-shimmer relative bg-[#130B03] border border-white/[0.05] rounded-2xl p-7 hover:border-[#C4922A]/25 hover:bg-[#1C0E04] transition-colors duration-300 overflow-hidden"
               >
-                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#c8a96e]/0 group-hover:bg-[#c8a96e]/6 blur-2xl transition-all duration-500" />
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/6 blur-2xl transition-all duration-500" />
                 <div className="relative">
                   <m.div
                     whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-                    className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#c8a96e]/10 border border-[#c8a96e]/15 mb-5 group-hover:bg-[#c8a96e]/15 group-hover:border-[#c8a96e]/30 transition-all duration-300"
+                    className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#C4922A]/10 border border-[#C4922A]/15 mb-5 group-hover:bg-[#C4922A]/15 group-hover:border-[#C4922A]/30 transition-all duration-300"
                   >
-                    <Icon className="w-5 h-5 text-[#c8a96e]" />
+                    <Icon className="w-5 h-5 text-[#C4922A]" />
                   </m.div>
-                  <h3 className="text-white font-bold text-base mb-2.5 group-hover:text-[#c8a96e] transition-colors duration-200">{content.title}</h3>
+                  <h3 className="text-white font-bold text-base mb-2.5 group-hover:text-[#C4922A] transition-colors duration-200">{content.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{content.desc}</p>
                 </div>
               </m.div>

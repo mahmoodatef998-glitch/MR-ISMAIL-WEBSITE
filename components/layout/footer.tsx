@@ -27,7 +27,7 @@ export function Footer() {
 
   return (
     <>
-      <footer className="bg-[#030810] border-t border-[#c8a96e]/10">
+      <footer className="bg-[#080503] border-t border-[#C4922A]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
           <m.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"
@@ -46,13 +46,13 @@ export function Footer() {
               >
                 <m.div
                   whileHover={{ rotate: 5, scale: 1.05 }}
-                  className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#c8a96e] to-[#e8c97a] flex items-center justify-center shadow-lg shadow-[#c8a96e]/20"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C4922A] to-[#D4A840] flex items-center justify-center shadow-lg shadow-[#C4922A]/20"
                 >
-                  <span className="text-[#050b18] font-black text-sm tracking-tighter">MI</span>
+                  <span className="text-[#0A0705] font-black text-sm tracking-tighter">MI</span>
                 </m.div>
                 <div className="leading-tight">
                   <div className="text-white font-bold text-sm">Mr. Ismail Trading</div>
-                  <div className="text-[#c8a96e] text-[10px] tracking-widest uppercase">Wholesale Mobile Devices</div>
+                  <div className="text-[#C4922A] text-[10px] tracking-widest uppercase">Wholesale Mobile Devices</div>
                 </div>
               </a>
 
@@ -69,7 +69,7 @@ export function Footer() {
                   { icon: Mail, text: 'sales@mr-ismail-trading.ae' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 text-sm text-gray-400">
-                    <Icon className="w-3.5 h-3.5 text-[#c8a96e] shrink-0" />
+                    <Icon className="w-3.5 h-3.5 text-[#C4922A] shrink-0" />
                     {text}
                   </div>
                 ))}
@@ -87,7 +87,7 @@ export function Footer() {
                     <a
                       href={`#${l.id}`}
                       onClick={(e) => { e.preventDefault(); scrollTo(l.id) }}
-                      className="link-underline text-sm text-gray-500 hover:text-[#c8a96e] transition-colors duration-200"
+                      className="link-underline text-sm text-gray-500 hover:text-[#C4922A] transition-colors duration-200"
                     >
                       {lang === 'ar' ? l.ar : l.en}
                     </a>
@@ -96,7 +96,7 @@ export function Footer() {
                 <li>
                   <a
                     href="/admin"
-                    className="link-underline text-sm text-gray-500 hover:text-[#c8a96e] transition-colors duration-200"
+                    className="link-underline text-sm text-gray-500 hover:text-[#C4922A] transition-colors duration-200"
                   >
                     {lang === 'en' ? 'Admin Portal' : 'بوابة الإدارة'}
                   </a>
@@ -115,7 +115,7 @@ export function Footer() {
                     <a
                       href="#products"
                       onClick={(e) => { e.preventDefault(); scrollTo('products') }}
-                      className="link-underline text-sm text-gray-500 hover:text-[#c8a96e] transition-colors duration-200"
+                      className="link-underline text-sm text-gray-500 hover:text-[#C4922A] transition-colors duration-200"
                     >
                       {lang === 'ar' ? c.ar : c.en}
                     </a>
@@ -133,7 +133,7 @@ export function Footer() {
                     key={b}
                     variants={scaleIn}
                     whileHover={{ scale: 1.05 }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#c8a96e]/6 border border-[#c8a96e]/12 rounded-full text-[10px] font-medium text-[#c8a96e]"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#C4922A]/6 border border-[#C4922A]/12 rounded-full text-[10px] font-medium text-[#C4922A]"
                   >
                     {b}
                   </m.div>

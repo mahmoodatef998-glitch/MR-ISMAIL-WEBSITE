@@ -23,7 +23,7 @@ export function AboutSection() {
   const { lang } = useLanguage()
 
   return (
-    <section id="about" className="py-24 bg-[#050b18]">
+    <section id="about" className="py-24 bg-[#0A0705]">
       <div className="section-divider mb-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
@@ -36,7 +36,7 @@ export function AboutSection() {
             whileInView="show"
             viewport={viewportOnce}
           >
-            <m.p variants={fadeLeft} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+            <m.p variants={fadeLeft} className="text-[#C4922A] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
               {lang === 'en' ? 'About Us' : 'من نحن'}
             </m.p>
             <m.h2 variants={fadeLeft} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
@@ -63,12 +63,12 @@ export function AboutSection() {
                 >
                   <m.div
                     whileHover={{ scale: 1.1 }}
-                    className="shrink-0 w-14 h-7 flex items-center justify-center bg-[#c8a96e]/10 border border-[#c8a96e]/20 rounded-lg group-hover:bg-[#c8a96e]/20 transition-colors"
+                    className="shrink-0 w-14 h-7 flex items-center justify-center bg-[#C4922A]/10 border border-[#C4922A]/20 rounded-lg group-hover:bg-[#C4922A]/20 transition-colors"
                   >
-                    <span className="text-[#c8a96e] text-xs font-bold">{ms.year}</span>
+                    <span className="text-[#C4922A] text-xs font-bold">{ms.year}</span>
                   </m.div>
                   <div className="flex items-center gap-2 text-sm text-gray-400 pt-0.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#c8a96e] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#C4922A] shrink-0" />
                     {lang === 'ar' ? ms.ar : ms.en}
                   </div>
                 </m.div>
@@ -88,7 +88,7 @@ export function AboutSection() {
             <m.div
               variants={fadeRight}
               whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-              className="bg-gradient-to-br from-[#c8a96e] to-[#e8c97a] rounded-2xl p-8 text-[#050b18] shadow-2xl shadow-[#c8a96e]/20"
+              className="bg-gradient-to-br from-[#C4922A] to-[#D4A840] rounded-2xl p-8 text-[#0A0705] shadow-2xl shadow-[#C4922A]/20"
             >
               <div className="flex items-center justify-between mb-4">
                 <TrendingUp className="w-8 h-8 opacity-60" />
@@ -114,9 +114,9 @@ export function AboutSection() {
                   key={en}
                   variants={scaleIn}
                   whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                  className="bg-[#0a1628] border border-white/[0.06] rounded-2xl p-6 text-center hover:border-[#c8a96e]/20 transition-colors"
+                  className="bg-[#130B03] border border-white/[0.06] rounded-2xl p-6 text-center hover:border-[#C4922A]/20 transition-colors"
                 >
-                  <Icon className="w-6 h-6 text-[#c8a96e] mx-auto mb-3" />
+                  <Icon className="w-6 h-6 text-[#C4922A] mx-auto mb-3" />
                   <div className="text-3xl font-black text-white mb-1">
                     <CountUp end={value} suffix={suffix} duration={2} />
                   </div>
@@ -128,10 +128,10 @@ export function AboutSection() {
             {/* Certifications */}
             <m.div
               variants={fadeRight}
-              className="bg-[#0a1628] border border-white/[0.06] rounded-2xl p-6 hover:border-[#c8a96e]/15 transition-colors"
+              className="bg-[#130B03] border border-white/[0.06] rounded-2xl p-6 hover:border-[#C4922A]/15 transition-colors"
             >
               <div className="flex items-center gap-2 mb-4">
-                <Award className="w-4 h-4 text-[#c8a96e]" />
+                <Award className="w-4 h-4 text-[#C4922A]" />
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                   {lang === 'en' ? 'Certifications & Partnerships' : 'الشهادات والشراكات'}
                 </span>
@@ -145,7 +145,7 @@ export function AboutSection() {
                     key={c}
                     variants={scaleIn}
                     whileHover={{ scale: 1.05 }}
-                    className="px-3 py-1.5 bg-white/[0.04] border border-[#c8a96e]/15 text-[#c8a96e] text-[11px] font-medium rounded-full hover:bg-[#c8a96e]/10 transition-colors cursor-default"
+                    className="px-3 py-1.5 bg-white/[0.04] border border-[#C4922A]/15 text-[#C4922A] text-[11px] font-medium rounded-full hover:bg-[#C4922A]/10 transition-colors cursor-default"
                   >
                     {c}
                   </m.span>

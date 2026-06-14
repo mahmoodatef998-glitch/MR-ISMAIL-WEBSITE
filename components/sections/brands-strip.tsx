@@ -36,15 +36,15 @@ export function BrandsStrip() {
   const { lang } = useLanguage()
 
   return (
-    <div className="bg-[#030810] border-y border-[#c8a96e]/8 py-6 overflow-hidden">
+    <div className="bg-[#080503] border-y border-[#C4922A]/8 py-6 overflow-hidden">
       <p className="text-center text-[10px] font-bold text-gray-600 uppercase tracking-[0.25em] mb-5">
         {lang === 'en' ? 'Authorized distributor for leading global brands' : 'موزع معتمد للعلامات التجارية العالمية الرائدة'}
       </p>
 
       {/* Row 1 — left to right */}
       <div className="relative flex mb-3">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#030810] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#030810] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#080503] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#080503] to-transparent z-10 pointer-events-none" />
         <div className="flex animate-marquee gap-3 whitespace-nowrap">
           {[...BRANDS_ROW1, ...BRANDS_ROW1, ...BRANDS_ROW1].map((b, i) => (
             <BrandPill key={i} name={b.name} color={b.color} />
@@ -54,8 +54,8 @@ export function BrandsStrip() {
 
       {/* Row 2 — right to left */}
       <div className="relative flex">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#030810] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#030810] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#080503] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#080503] to-transparent z-10 pointer-events-none" />
         <div className="flex animate-marquee-reverse gap-3 whitespace-nowrap">
           {[...BRANDS_ROW2, ...BRANDS_ROW2, ...BRANDS_ROW2].map((b, i) => (
             <BrandPill key={i} name={b.name} color={b.color} />

@@ -27,7 +27,7 @@ export function ProcessSection() {
   const { lang } = useLanguage()
 
   return (
-    <section id="process" className="py-24 bg-[#050b18] overflow-hidden">
+    <section id="process" className="py-24 bg-[#0A0705] overflow-hidden">
       <div className="section-divider mb-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
@@ -40,7 +40,7 @@ export function ProcessSection() {
           whileInView="show"
           viewport={viewportOnce}
         >
-          <m.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+          <m.p variants={fadeUp} className="text-[#C4922A] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
             {lang === 'en' ? 'How It Works' : 'كيف نعمل'}
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
@@ -83,23 +83,23 @@ export function ProcessSection() {
                   <div className="relative inline-flex mb-8">
                     <m.div
                       whileHover={{ rotate: [0, -10, 10, -5, 0], transition: { duration: 0.5 } }}
-                      className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c8a96e]/15 to-[#c8a96e]/5 border border-[#c8a96e]/20 flex items-center justify-center group-hover:border-[#c8a96e]/50 group-hover:from-[#c8a96e]/20 group-hover:to-[#c8a96e]/10 transition-all duration-300"
+                      className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C4922A]/15 to-[#C4922A]/5 border border-[#C4922A]/20 flex items-center justify-center group-hover:border-[#C4922A]/50 group-hover:from-[#C4922A]/20 group-hover:to-[#C4922A]/10 transition-all duration-300"
                     >
-                      <Icon className="w-7 h-7 text-[#c8a96e]" />
+                      <Icon className="w-7 h-7 text-[#C4922A]" />
                     </m.div>
                     <m.span
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       viewport={viewportOnce}
                       transition={{ type: 'spring', stiffness: 500, damping: 20, delay: 0.3 + i * 0.15 }}
-                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-br from-[#c8a96e] to-[#e8c97a] text-[#050b18] text-[10px] font-black flex items-center justify-center"
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-br from-[#C4922A] to-[#D4A840] text-[#0A0705] text-[10px] font-black flex items-center justify-center"
                     >
                       {i + 1}
                     </m.span>
                   </div>
 
                   <div className="px-4">
-                    <h3 className="text-white font-bold text-lg mb-3 group-hover:text-[#c8a96e] transition-colors duration-200">
+                    <h3 className="text-white font-bold text-lg mb-3 group-hover:text-[#C4922A] transition-colors duration-200">
                       {content.title}
                     </h3>
                     <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
@@ -118,7 +118,7 @@ export function ProcessSection() {
           initial="hidden"
           whileInView="show"
           viewport={viewportOnce}
-          className="mt-16 rounded-2xl bg-gradient-to-r from-[#0a1628] via-[#0d1e36] to-[#0a1628] border border-[#c8a96e]/10 p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
+          className="mt-16 rounded-2xl bg-gradient-to-r from-[#130B03] via-[#1C0E04] to-[#130B03] border border-[#C4922A]/10 p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
         >
           <div>
             <p className="text-white font-bold text-lg mb-1">
@@ -135,7 +135,7 @@ export function ProcessSection() {
             whileTap={{ scale: 0.97 }}
             href="#contact"
             onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
-            className="shrink-0 inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#c8a96e] to-[#e8c97a] text-[#050b18] font-bold text-sm rounded-xl hover:shadow-xl hover:shadow-[#c8a96e]/20 transition-all duration-300"
+            className="shrink-0 inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#C4922A] to-[#D4A840] text-[#0A0705] font-bold text-sm rounded-xl hover:shadow-xl hover:shadow-[#C4922A]/20 transition-all duration-300"
           >
             {lang === 'en' ? 'Request a Quote' : 'طلب عرض سعر'}
           </m.a>

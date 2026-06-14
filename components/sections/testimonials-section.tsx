@@ -89,7 +89,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`w-3.5 h-3.5 ${i < rating ? 'text-[#c8a96e] fill-[#c8a96e]' : 'text-gray-600'}`}
+          className={`w-3.5 h-3.5 ${i < rating ? 'text-[#C4922A] fill-[#C4922A]' : 'text-gray-600'}`}
         />
       ))}
     </div>
@@ -103,7 +103,7 @@ export function TestimonialsSection() {
   const regular = TESTIMONIALS.filter((t) => !t.highlight)
 
   return (
-    <section id="testimonials" className="py-24 bg-[#030810] overflow-hidden">
+    <section id="testimonials" className="py-24 bg-[#080503] overflow-hidden">
       <div className="section-divider mb-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24">
@@ -116,7 +116,7 @@ export function TestimonialsSection() {
           whileInView="show"
           viewport={viewportOnce}
         >
-          <m.p variants={fadeUp} className="text-[#c8a96e] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
+          <m.p variants={fadeUp} className="text-[#C4922A] text-xs font-bold uppercase tracking-[0.2em] mb-3 section-label">
             {lang === 'en' ? 'Client Stories' : 'قصص عملائنا'}
           </m.p>
           <m.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
@@ -146,20 +146,20 @@ export function TestimonialsSection() {
               key={t.nameEn}
               variants={i === 0 ? fadeLeft : fadeRight}
               whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-              className="group relative bg-gradient-to-br from-[#0d1e36] to-[#0a1628] border border-[#c8a96e]/15 rounded-2xl p-8 hover:border-[#c8a96e]/35 transition-all duration-300 overflow-hidden cursor-default"
+              className="group relative bg-gradient-to-br from-[#1C0E04] to-[#130B03] border border-[#C4922A]/15 rounded-2xl p-8 hover:border-[#C4922A]/35 transition-all duration-300 overflow-hidden cursor-default"
             >
               {/* Glow */}
-              <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[#c8a96e]/0 group-hover:bg-[#c8a96e]/8 blur-3xl transition-all duration-500 pointer-events-none" />
+              <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/8 blur-3xl transition-all duration-500 pointer-events-none" />
 
               {/* Quote icon */}
               <div className="absolute top-6 right-6 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity">
-                <Quote className="w-16 h-16 text-[#c8a96e]" />
+                <Quote className="w-16 h-16 text-[#C4922A]" />
               </div>
 
               <div className="relative">
                 <div className="flex items-start justify-between mb-5">
                   <StarRating rating={t.rating} />
-                  <span className="text-[10px] font-bold text-[#c8a96e]/70 bg-[#c8a96e]/8 border border-[#c8a96e]/15 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-[#C4922A]/70 bg-[#C4922A]/8 border border-[#C4922A]/15 px-2.5 py-1 rounded-full uppercase tracking-wider">
                     {lang === 'en' ? t.orders : t.ordersAr}
                   </span>
                 </div>
@@ -169,7 +169,7 @@ export function TestimonialsSection() {
                 </p>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#c8a96e]/15 border border-[#c8a96e]/20 flex items-center justify-center text-lg shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-[#C4922A]/15 border border-[#C4922A]/20 flex items-center justify-center text-lg shrink-0">
                     {t.flag}
                   </div>
                   <div>
@@ -198,9 +198,9 @@ export function TestimonialsSection() {
               key={t.nameEn}
               variants={scaleIn}
               whileHover={{ y: -5, transition: { duration: 0.25, ease: 'easeOut' } }}
-              className="group relative bg-[#0a1628] border border-white/[0.05] rounded-2xl p-6 hover:border-[#c8a96e]/20 hover:bg-[#0d1e36] transition-all duration-300 overflow-hidden cursor-default"
+              className="group relative bg-[#130B03] border border-white/[0.05] rounded-2xl p-6 hover:border-[#C4922A]/20 hover:bg-[#1C0E04] transition-all duration-300 overflow-hidden cursor-default"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#c8a96e]/0 group-hover:bg-[#c8a96e]/6 blur-2xl transition-all duration-500 pointer-events-none" />
+              <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#C4922A]/0 group-hover:bg-[#C4922A]/6 blur-2xl transition-all duration-500 pointer-events-none" />
 
               <div className="relative">
                 <div className="flex items-center justify-between mb-4">
@@ -213,14 +213,14 @@ export function TestimonialsSection() {
                 </p>
 
                 <div className="border-t border-white/[0.05] pt-4 flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#c8a96e]/10 border border-[#c8a96e]/15 flex items-center justify-center text-sm shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#C4922A]/10 border border-[#C4922A]/15 flex items-center justify-center text-sm shrink-0">
                     {t.flag}
                   </div>
                   <div className="min-w-0">
                     <p className="text-white font-semibold text-xs truncate">{lang === 'en' ? t.nameEn : t.nameAr}</p>
                     <p className="text-gray-600 text-[10px] truncate">{lang === 'en' ? t.roleEn : t.roleAr}</p>
                   </div>
-                  <span className="ml-auto shrink-0 text-[9px] font-bold text-[#c8a96e]/60 bg-[#c8a96e]/6 px-2 py-0.5 rounded-full">
+                  <span className="ml-auto shrink-0 text-[9px] font-bold text-[#C4922A]/60 bg-[#C4922A]/6 px-2 py-0.5 rounded-full">
                     {lang === 'en' ? t.orders : t.ordersAr}
                   </span>
                 </div>
