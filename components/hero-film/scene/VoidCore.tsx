@@ -24,12 +24,22 @@ export function VoidCore({ progressRef }: Props) {
     // Organic breathing — 3 irrational frequencies feel biological, not mechanical
     const breathe = 1 + Math.sin(t * 0.83) * 0.12 + Math.sin(t * 1.31) * 0.04
 
-    // Scene 1 (0–0.10): star point only, breathing
-    // Transition (0.10–0.28): expansion begins — star is "being born"
-    const expand = p < 0.10 ? 0 : Math.min(1, (p - 0.10) / 0.18)
-    const scale = (0.012 + expand * 0.55) * breathe
+    let baseScale: number
+    if (p < 0.10) {
+      // Scene 1: tiny star point, breathing only
+      baseScale = 0.012
+    } else if (p < 0.20) {
+      // Expansion: star is being born (0.012 → 0.562)
+      baseScale = 0.012 + ((p - 0.10) / 0.10) * 0.55
+    } else if (p < 0.26) {
+      // Nova collapse: star gave its light to the phone (0.562 → 0)
+      baseScale = (1 - (p - 0.20) / 0.06) * 0.562
+    } else {
+      // Star is gone — phone carries the light forward
+      baseScale = 0
+    }
 
-    meshRef.current.scale.setScalar(scale)
+    meshRef.current.scale.setScalar(baseScale * breathe)
   })
 
   return (
