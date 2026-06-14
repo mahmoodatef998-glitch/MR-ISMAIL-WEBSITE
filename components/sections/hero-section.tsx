@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import { useLanguage } from '@/hooks/use-language'
 import { ArrowRight, Shield, Zap, Globe, PhoneCall, Sparkles } from 'lucide-react'
-import { m, useScroll, useTransform, MotionValue } from 'framer-motion'
+import { m, useScroll, useTransform, MotionValue, useSpring } from 'framer-motion'
 import { CountUp } from '@/components/ui/count-up'
 import { fadeUp, stagger, revealHeavy, snapIn } from '@/lib/motion'
 
@@ -206,16 +206,6 @@ function AnimatedCamel({ progress }: { progress: MotionValue<number> }) {
         <ellipse cx="308" cy="376" rx="15" ry="6" fill={BDD} />
       </m.g>
 
-      {/* ══ COIN RING (logo-inspired decorative circle) ══ */}
-      <circle
-        cx="232" cy="195"
-        r="195"
-        fill="none"
-        stroke={BM}
-        strokeWidth="1.5"
-        strokeDasharray="6 14"
-        opacity="0.12"
-      />
     </m.svg>
   )
 }
@@ -245,6 +235,13 @@ export function HeroSection() {
     offset: ['start start', 'end start'],
   })
 
+  // Smooth spring for parallax blobs (0.3x scroll rate = slower than content)
+  const blobY1 = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const blobY2 = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
+  // Coin ring drifts at 0.6x camel speed
+  const ringY  = useTransform(scrollYProgress, [0, 1], ['0%', '12%'])
+  const ringX  = useTransform(scrollYProgress, [0, 0.35, 1], ['6%', '0%', '-2%'])
+
   return (
     <section
       id="home"
@@ -257,10 +254,16 @@ export function HeroSection() {
         {/* Warm bronze grid */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(196,146,42,0.028)_1px,transparent_1px),linear-gradient(to_right,rgba(196,146,42,0.028)_1px,transparent_1px)] bg-[size:72px_72px]" />
 
-        {/* Left amber bloom */}
-        <div className="animate-float-slow absolute top-1/4 -left-48 w-[700px] h-[700px] rounded-full bg-[#C4922A] blur-[160px] opacity-[0.09]" />
-        {/* Right deep amber */}
-        <div className="animate-float-slower absolute bottom-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-[#D4A840] blur-[140px] opacity-[0.06]" />
+        {/* Left amber bloom — parallax 0.3x */}
+        <m.div
+          className="absolute top-1/4 -left-48 w-[700px] h-[700px] rounded-full bg-[#C4922A] blur-[160px] opacity-[0.09]"
+          style={{ y: blobY1 }}
+        />
+        {/* Right deep amber — parallax 0.18x */}
+        <m.div
+          className="absolute bottom-1/3 -right-40 w-[500px] h-[500px] rounded-full bg-[#D4A840] blur-[140px] opacity-[0.06]"
+          style={{ y: blobY2 }}
+        />
         {/* Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#0A0705_82%)]" />
 
@@ -434,6 +437,27 @@ export function HeroSection() {
                 filter: 'blur(32px)',
               }}
             />
+
+            {/* Coin ring — separate parallax layer (drifts slower than camel) */}
+            <m.div
+              className="absolute inset-0 pointer-events-none"
+              style={{ y: ringY, x: ringX }}
+            >
+              <svg viewBox="0 0 560 410" className="w-full h-full" aria-hidden="true">
+                <circle
+                  cx="232" cy="195" r="195"
+                  fill="none" stroke="#C4922A"
+                  strokeWidth="1.5" strokeDasharray="6 14"
+                  opacity="0.14"
+                />
+                <circle
+                  cx="232" cy="195" r="210"
+                  fill="none" stroke="#C4922A"
+                  strokeWidth="0.5" strokeDasharray="2 22"
+                  opacity="0.06"
+                />
+              </svg>
+            </m.div>
 
             {/* Scroll hint */}
             <m.div
