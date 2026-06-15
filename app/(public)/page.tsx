@@ -1,4 +1,4 @@
-import { HeroFilm } from '@/components/hero-film'
+import { HeroPhone } from '@/components/hero-phone'
 import { BrandsStrip } from '@/components/sections/brands-strip'
 import { ProductsSection } from '@/components/sections/products-section'
 import { FeaturesSection } from '@/components/sections/features-section'
@@ -35,7 +35,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroFilm />
+      <HeroPhone />
       <AboutSection />
       <FeaturesSection />
       <BrandsStrip />
