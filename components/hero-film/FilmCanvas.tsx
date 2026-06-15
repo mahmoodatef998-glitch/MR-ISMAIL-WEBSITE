@@ -7,6 +7,7 @@ import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { VoidCore }    from './scene/VoidCore'
 import { PhoneBody }   from './scene/PhoneBody'
+import { PhoneScreen } from './scene/PhoneScreen'
 import { FilmLights }  from './scene/FilmLights'
 import { FilmCamera }  from './scene/FilmCamera'
 
@@ -34,27 +35,29 @@ export function FilmCanvas({ progressRef }: Props) {
       <PerformanceMonitor onDecline={() => {}} />
 
       <Suspense fallback={null}>
-        {/* Scene 1: the void star — expands then collapses as phone is born */}
+        {/* Scene 1: void star */}
         <VoidCore progressRef={progressRef} />
 
-        {/* Scene 2+: phone body + lighting system */}
-        <PhoneBody  progressRef={progressRef} />
+        {/* Scene 2+: phone body, back details, screen */}
+        <PhoneBody   progressRef={progressRef} />
+        <PhoneScreen progressRef={progressRef} />
+
+        {/* Lighting system — all scenes */}
         <FilmLights progressRef={progressRef} />
       </Suspense>
 
-      {/* Camera outside Suspense — always animating */}
+      {/* Camera outside Suspense — always ticking */}
       <FilmCamera progressRef={progressRef} />
 
-      {/* Post-processing */}
       <EffectComposer>
-        {/* Low threshold catches both the HDR star and the rim-lit titanium edge */}
+        {/* Bloom: catches the star, the rim highlight, and the screen glow */}
         <Bloom
           intensity={4.0}
           luminanceThreshold={0.08}
           luminanceSmoothing={0.4}
           height={512}
         />
-        {/* Vignette frames the void and the phone — draws eye to center */}
+        {/* Vignette: frames the void and the phone */}
         <Vignette offset={0.25} darkness={0.65} />
       </EffectComposer>
     </Canvas>

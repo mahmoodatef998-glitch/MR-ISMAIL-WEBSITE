@@ -10,7 +10,7 @@ const W = 0.360
 const H = 0.748
 const D = 0.042
 
-// Camera island platform size
+// Camera island platform
 const IS_W = 0.175
 const IS_H = 0.162
 const IS_D = 0.007
@@ -27,32 +27,45 @@ export function PhoneBody({ progressRef }: Props) {
     const p = progressRef.current
     if (!groupRef.current) return
 
-    // Phone was always in the dark — scale 0 hides it during Scene 1's void
+    // Scale 0 in Scene 1 — phone was always in the dark, the light reveals it
     groupRef.current.scale.setScalar(p > 0.12 ? 1 : 0)
 
-    // Y rotation choreography across scenes
+    // ── Y rotation choreography ────────────────────────────────────
     let yRot: number
     if (p < 0.24) {
-      // Face-on, front toward camera
       yRot = 0
     } else if (p < 0.28) {
-      // Scene 2 money shot: pivot to -15° for 3/4 angle
+      // Scene 2 money shot: 0 → -15° (right edge toward camera)
       yRot = -easeInOut((p - 0.24) / 0.04) * (Math.PI / 12)
     } else if (p < 0.32) {
-      // Scene 3 entry: -15° → 180° (flip to reveal the back)
-      const t = easeInOut((p - 0.28) / 0.04)
-      yRot = lerp(-Math.PI / 12, Math.PI, t)
-    } else {
-      // Scene 3+: back face toward camera
+      // Scene 3 entry: -15° → 180° (flip to reveal back)
+      yRot = lerp(-Math.PI / 12, Math.PI, easeInOut((p - 0.28) / 0.04))
+    } else if (p < 0.43) {
       yRot = Math.PI
+    } else if (p < 0.47) {
+      // Scene 4 entry: 180° → 0° (flip back to front, screen will activate)
+      yRot = lerp(Math.PI, 0, easeInOut((p - 0.43) / 0.04))
+    } else {
+      yRot = 0
     }
 
     groupRef.current.rotation.y = yRot
+
+    // ── X rotation: Scene 4 end — screen tilts toward user ────────
+    // Negative X = top of phone tilts toward camera = eye contact
+    let xRot = 0
+    if (p > 0.54 && p <= 0.57) {
+      xRot = -easeInOut((p - 0.54) / 0.03) * (5 * Math.PI / 180)
+    } else if (p > 0.57) {
+      xRot = -(5 * Math.PI / 180)
+    }
+    groupRef.current.rotation.x = xRot
   })
 
   return (
     <group ref={groupRef}>
-      {/* ── Frame: titanium metallic ────────────────────────────── */}
+
+      {/* ── Frame: titanium metallic ─────────────────────────────── */}
       <RoundedBox args={[W, H, D]} radius={0.020} smoothness={4}>
         <meshStandardMaterial
           color="#070707"
@@ -64,9 +77,9 @@ export function PhoneBody({ progressRef }: Props) {
 
       {/*
         ── Back glass ──────────────────────────────────────────────
-        In local space (Y=0°): z = -D/2 is the back face.
-        rotation={[Math.PI, 0, 0]} flips the plane normal to face -Z (local back).
-        After group.rotation.y = Math.PI (Scene 3): local -Z → world +Z = toward camera. ✓
+        Normal points -Z in local space (rotation={[Math.PI,0,0]}).
+        After group Y=180° (Scene 3): local -Z → world +Z = toward camera. ✓
+        After group Y=0° (Scene 4): faces away from camera. ✓
       */}
       <mesh position={[0, 0, -(D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
         <planeGeometry args={[W - 0.018, H - 0.018]} />
@@ -80,36 +93,30 @@ export function PhoneBody({ progressRef }: Props) {
       </mesh>
 
       {/*
-        ── Camera island ────────────────────────────────────────────
-        Local position: upper-left of back face (local space, Y=0°).
-        After Y=180°: appears at world upper-right, visible from +Z camera.
+        ── Camera island: upper-left in local space ────────────────
+        Local (-0.088, 0.218, -D/2-0.003) → after Y=180°: world right side ✓
       */}
       <group position={[-0.088, 0.218, -(D / 2 + 0.003)]}>
-        {/* Island platform */}
         <mesh>
           <boxGeometry args={[IS_W, IS_H, IS_D]} />
           <meshStandardMaterial color="#050505" metalness={0.88} roughness={0.10} />
         </mesh>
 
-        {/* Lens circles — rotation={[Math.PI,0,0]} makes normal point -Z (toward camera after Y=180°) */}
-        {/* Main lens — top left */}
-        <mesh position={[-0.038, 0.042, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
+        {/* Lens circles — rotation={[Math.PI,0,0]}: normal faces -Z (back direction) */}
+        <mesh position={[-0.038,  0.042, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.022, 40]} />
           <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
         </mesh>
-
-        {/* Wide lens — bottom left */}
         <mesh position={[-0.038, -0.042, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.019, 40]} />
           <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
         </mesh>
-
-        {/* Ultra-wide — right side */}
-        <mesh position={[0.042, 0.000, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
+        <mesh position={[ 0.042,  0.000, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.016, 40]} />
           <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
         </mesh>
       </group>
+
     </group>
   )
 }

@@ -17,49 +17,55 @@ export function FilmCamera({ progressRef }: Props) {
     let fov = cam.fov
     let updateProjection = false
 
+    // ── Scene 1: void ────────────────────────────────────────────
     if (p <= 0.10) {
-      // Scene 1: perfectly still — the stillness is the statement
       camera.position.set(0, 0, 5.0)
 
+    // ── Star rush-in ─────────────────────────────────────────────
     } else if (p <= 0.14) {
-      // Rush in as the star expands and the phone is born
       const t = easeInOut((p - 0.10) / 0.04)
       camera.position.set(0, 0, lerp(5.0, 3.0, t))
 
+    // ── Scene 2: pull-back reveal ─────────────────────────────────
     } else if (p <= 0.28) {
-      // Scene 2: slow pull-back — stepping away from a sculpture
       const t = easeInOut((p - 0.14) / 0.14)
       camera.position.set(0, 0, lerp(3.0, 6.5, t))
 
+    // ── Scene 3 entry: rush to macro ──────────────────────────────
     } else if (p <= 0.32) {
-      // Scene 3 entry: rush close to the back surface, FOV narrows to telephoto
       const t = easeInOut((p - 0.28) / 0.04)
       camera.position.set(lerp(0, -0.40, t), 0, lerp(6.5, 0.52, t))
       fov = lerp(45, 28, t)
       updateProjection = true
 
+    // ── Scene 3: horizontal dolly along back surface ───────────────
     } else if (p <= 0.42) {
-      // Scene 3 dolly: horizontal macro pass — left to right along the back
       const t = easeInOut((p - 0.32) / 0.10)
       camera.position.set(lerp(-0.40, 0.30, t), lerp(0, 0.12, t), 0.52)
       fov = 28
       updateProjection = true
 
+    // ── Scene 3 end: settle on camera island ──────────────────────
     } else if (p <= 0.43) {
-      // Scene 3 end: camera lands on the camera island — 3 lenses fill the frame
       const t = easeInOut((p - 0.42) / 0.01)
       camera.position.set(lerp(0.30, 0.09, t), lerp(0.12, 0.22, t), lerp(0.52, 0.44, t))
       fov = 28
       updateProjection = true
 
-    } else {
-      // Hold at camera island for Scene 4 entry
-      camera.position.set(0.09, 0.22, 0.44)
-      fov = 28
+    // ── Scene 4 entry: pull back to court portrait ────────────────
+    } else if (p <= 0.47) {
+      const t = easeInOut((p - 0.43) / 0.04)
+      camera.position.set(lerp(0.09, 0, t), lerp(0.22, 0, t), lerp(0.44, 2.8, t))
+      fov = lerp(28, 45, t)
       updateProjection = true
+
+    // ── Scene 4: court portrait — phone presented face-on ─────────
+    } else {
+      camera.position.set(0, 0, 2.8)
+      if (fov !== 45) { fov = 45; updateProjection = true }
     }
 
-    if (updateProjection && cam.fov !== fov) {
+    if (updateProjection) {
       cam.fov = fov
       cam.updateProjectionMatrix()
     }
