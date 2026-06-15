@@ -6,124 +6,147 @@ interface Props { progress: MotionValue<number> }
 
 export function PhoneOverlay({ progress }: Props) {
 
-  // Scene 2: assembled headline (p=0.50-0.62 hold, 0.62-0.66 fade)
-  const heroOp    = useTransform(progress, [0.50, 0.56, 0.62, 0.66], [0, 1, 1, 0])
-  const heroY     = useTransform(progress, [0.50, 0.56], [20, 0])
-  const taglineOp = useTransform(progress, [0.52, 0.58, 0.62, 0.66], [0, 1, 1, 0])
+  // Scene 1 (hand): brand label at bottom — p 0.04→0.16
+  const s1Op = useTransform(progress, [0.04, 0.10, 0.14, 0.18], [0, 1, 1, 0])
+  const s1Y  = useTransform(progress, [0.04, 0.10], [12, 0])
 
-  // Scene 3: camera close-up specs (p=0.82-0.90 show, 0.90-0.92 fade with phone reset)
-  const camTitleOp = useTransform(progress, [0.82, 0.87, 0.91, 0.93], [0, 1, 1, 0])
-  const spec1Op    = useTransform(progress, [0.83, 0.87, 0.91, 0.93], [0, 1, 1, 0])
-  const spec2Op    = useTransform(progress, [0.85, 0.89, 0.91, 0.93], [0, 1, 1, 0])
-  const spec3Op    = useTransform(progress, [0.87, 0.91, 0.91, 0.93], [0, 1, 1, 0])
-  const spec1Y     = useTransform(progress, [0.83, 0.87], [14, 0])
-  const spec2Y     = useTransform(progress, [0.85, 0.89], [14, 0])
-  const spec3Y     = useTransform(progress, [0.87, 0.91], [14, 0])
+  // Scene 2 (macro): camera headline + specs at bottom — p 0.25→0.38
+  const s2Op = useTransform(progress, [0.25, 0.31, 0.36, 0.40], [0, 1, 1, 0])
 
-  // Scene 4: CTA (p=0.93-1.0)
-  const ctaOp      = useTransform(progress, [0.93, 0.97, 0.99, 1.0], [0, 1, 1, 0])
-  const ctaLabelOp = useTransform(progress, [0.94, 0.98, 0.99, 1.0], [0, 1, 1, 0])
+  // Scene 3 (orange back): Arabic headline at bottom — p 0.45→0.58
+  const s3Op    = useTransform(progress, [0.45, 0.51, 0.56, 0.60], [0, 1, 1, 0])
+  const s3Y     = useTransform(progress, [0.45, 0.51], [28, 0])
+  const s3SubOp = useTransform(progress, [0.47, 0.53, 0.56, 0.60], [0, 1, 1, 0])
+
+  // Scene 4 (full reveal): color label top — p 0.65→0.76
+  const s4Op = useTransform(progress, [0.65, 0.71, 0.76, 0.80], [0, 1, 1, 0])
+
+  // Scene 5 (architecture): CTA at bottom — p 0.88→1.0
+  const s5Op    = useTransform(progress, [0.88, 0.94, 1.0], [0, 1, 1])
+  const s5Y     = useTransform(progress, [0.88, 0.94], [20, 0])
+  const s5CtaOp = useTransform(progress, [0.91, 0.97, 1.0], [0, 1, 1])
 
   const SPECS = [
-    { val: '48 MP', label: 'Main Camera', op: spec1Op, y: spec1Y },
-    { val: '8×',   label: 'Optical Zoom', op: spec2Op, y: spec2Y },
-    { val: 'ƒ/1.6',label: 'Aperture',    op: spec3Op, y: spec3Y },
+    { val: '48 MP', label: 'Main Camera' },
+    { val: '8×',   label: 'Optical Zoom' },
+    { val: 'ƒ/1.6', label: 'Aperture' },
   ]
 
   return (
     <div className="absolute inset-0 z-10 pointer-events-none select-none">
 
-      {/* ── Scene 2: assembled headline ───────────────────────────── */}
+      {/* ── Scene 1: brand label ─────────────────────────────────── */}
       <motion.div
-        className="absolute top-[10%] left-0 right-0 flex flex-col items-center gap-3"
-        style={{ opacity: heroOp }}
+        className="absolute bottom-10 left-0 right-0 flex flex-col items-center gap-2"
+        style={{ opacity: s1Op, y: s1Y }}
       >
-        <motion.h1
-          className="font-display text-5xl md:text-7xl gold-text text-center"
-          style={{ letterSpacing: '-0.02em', y: heroY }}
+        <p
+          className="text-[9px] uppercase tracking-[0.42em]"
+          style={{ fontFamily: 'var(--font-sans)', color: 'rgba(196,146,42,0.65)' }}
+        >
+          Mr. Ismail Trading LLC — Dubai
+        </p>
+        <p
+          className="text-white/55 text-xs tracking-[0.22em] uppercase"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 300 }}
+        >
+          iPhone 17 Pro Max
+        </p>
+      </motion.div>
+
+      {/* ── Scene 2: camera specs ────────────────────────────────── */}
+      <motion.div
+        className="absolute bottom-12 left-0 right-0 text-center"
+        style={{ opacity: s2Op }}
+      >
+        <p
+          className="text-white/78 text-2xl md:text-3xl"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 200, letterSpacing: '-0.022em' }}
+        >
+          Pro Camera System
+        </p>
+        <div className="flex justify-center gap-10 md:gap-14 mt-5">
+          {SPECS.map(({ val, label }) => (
+            <div key={label} className="flex flex-col items-center gap-1">
+              <span
+                className="text-white text-2xl md:text-3xl font-light"
+                style={{ fontFamily: 'var(--font-sans)', letterSpacing: '-0.022em' }}
+              >
+                {val}
+              </span>
+              <span
+                className="text-[9px] uppercase tracking-[0.22em]"
+                style={{ color: 'rgba(255,255,255,0.28)', fontFamily: 'var(--font-sans)' }}
+              >
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ── Scene 3: بلا حدود ────────────────────────────────────── */}
+      <motion.div
+        className="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-3"
+        style={{ opacity: s3Op, y: s3Y }}
+      >
+        <h1
+          className="font-display text-6xl md:text-8xl gold-text text-center"
+          style={{ letterSpacing: '-0.02em' }}
         >
           بلا حدود
-        </motion.h1>
+        </h1>
         <motion.p
-          className="text-white/38 text-sm tracking-[0.14em] uppercase text-center"
-          style={{ fontFamily: "var(--font-sans)", fontWeight: 300, opacity: taglineOp }}
+          className="text-white/38 text-sm tracking-[0.16em] uppercase text-center"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 300, opacity: s3SubOp }}
         >
           The flagship for those who lead.
         </motion.p>
       </motion.div>
 
-      {/* ── Scene 3: camera specs ─────────────────────────────────── */}
+      {/* ── Scene 4: color label ─────────────────────────────────── */}
       <motion.div
-        className="absolute top-[10%] left-0 right-0 text-center"
-        style={{ opacity: camTitleOp }}
+        className="absolute top-[9%] left-0 right-0 text-center"
+        style={{ opacity: s4Op }}
       >
         <p
-          className="text-white/85 text-3xl md:text-4xl"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 200, letterSpacing: '-0.025em' }}
+          className="text-[9px] uppercase tracking-[0.52em]"
+          style={{ fontFamily: 'var(--font-sans)', color: 'rgba(196,146,42,0.55)' }}
         >
-          A big zoom forward.
+          New
         </p>
         <p
-          className="mt-2 text-[10px] uppercase tracking-[0.28em]"
-          style={{ fontFamily: 'var(--font-sans)', color: 'rgba(196,146,42,0.5)' }}
+          className="text-white/65 text-base md:text-lg tracking-[0.14em] uppercase mt-1.5"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 300 }}
         >
-          Pro Camera System
+          Desert Titanium
         </p>
       </motion.div>
 
-      <div className="absolute bottom-14 left-0 right-0 flex justify-center gap-10 md:gap-16">
-        {SPECS.map(({ val, label, op, y }) => (
-          <motion.div
-            key={label}
-            className="flex flex-col items-center gap-1"
-            style={{ opacity: op, y }}
-          >
-            <span
-              className="text-white text-3xl md:text-4xl font-light"
-              style={{ fontFamily: 'var(--font-sans)', letterSpacing: '-0.025em' }}
-            >
-              {val}
-            </span>
-            <span
-              className="text-[9px] uppercase tracking-[0.22em]"
-              style={{ fontFamily: 'var(--font-sans)', color: 'rgba(255,255,255,0.28)' }}
-            >
-              {label}
-            </span>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── Scene 4: CTA ──────────────────────────────────────────── */}
+      {/* ── Scene 5: CTA ─────────────────────────────────────────── */}
       <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center gap-5"
-        style={{ opacity: ctaOp }}
+        className="absolute bottom-10 left-0 right-0 flex flex-col items-center gap-3"
+        style={{ opacity: s5Op, y: s5Y }}
       >
-        <motion.p
-          className="text-[10px] uppercase tracking-[0.38em]"
-          style={{ fontFamily: 'var(--font-sans)', color: 'rgba(196,146,42,0.48)', opacity: ctaLabelOp }}
-        >
-          Mr. Ismail Trading LLC — Dubai
-        </motion.p>
         <h2
-          className="font-display text-4xl md:text-5xl text-white/88 text-center"
+          className="font-display text-3xl md:text-4xl text-white/88 text-center"
           style={{ letterSpacing: '-0.015em' }}
         >
           اكتشف المجموعة
         </h2>
         <p
-          className="text-white/35 text-sm text-center"
+          className="text-white/32 text-sm text-center"
           style={{ fontFamily: 'var(--font-sans)', fontWeight: 300 }}
         >
           Flagship devices · B2B wholesale · 40+ countries
         </p>
-        <a
+        <motion.a
           href="#collection"
-          className="btn-bronze px-10 py-3.5 text-sm tracking-[0.12em] uppercase pointer-events-auto mt-3"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 500 }}
+          className="btn-bronze px-10 py-3.5 text-sm tracking-[0.12em] uppercase pointer-events-auto mt-2"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, opacity: s5CtaOp }}
         >
           View Collection →
-        </a>
+        </motion.a>
       </motion.div>
 
     </div>

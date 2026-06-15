@@ -29,7 +29,7 @@ export function HeroPhone() {
 
   return (
     <div ref={containerRef} id="home" className="relative" style={{ height: '560vh' }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black" style={{ cursor: 'none' }}>
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         <PhoneLayers progress={progress} />
         <PhoneOverlay progress={progress} />
       </div>
