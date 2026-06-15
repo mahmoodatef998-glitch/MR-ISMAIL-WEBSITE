@@ -14,28 +14,33 @@ const SCENES = [
   { src: '/storyboard/scene-03.jpg.png', alt: '4-Layer Architecture' },
 ]
 
-export function PhoneLayers({ progress }: Props) {
-  // Opacity: each scene fades in then out; scene 1 starts visible, scene 5 stays visible
-  const op0 = useTransform(progress, [0, 0.18, 0.22],          [1, 1, 0])
-  const op1 = useTransform(progress, [0.18, 0.22, 0.38, 0.42], [0, 1, 1, 0])
-  const op2 = useTransform(progress, [0.38, 0.42, 0.58, 0.62], [0, 1, 1, 0])
-  const op3 = useTransform(progress, [0.58, 0.62, 0.78, 0.82], [0, 1, 1, 0])
-  const op4 = useTransform(progress, [0.78, 0.82, 1.0],        [0, 1, 1])
+// Scene windows (hold + 10% wide crossfade on each side):
+// S1: 0.00 → 0.25   S2: 0.15→0.45   S3: 0.35→0.65   S4: 0.55→0.85   S5: 0.75→1.0
 
-  // Subtle Ken Burns: each scene slowly zooms (1.04→1.0 entry, 1.0→1.04 hold)
-  const sc0 = useTransform(progress, [0, 0.18],    [1.05, 1.0])
-  const sc1 = useTransform(progress, [0.22, 0.38], [1.0, 1.05])
-  const sc2 = useTransform(progress, [0.42, 0.58], [1.0, 1.05])
-  const sc3 = useTransform(progress, [0.62, 0.78], [1.0, 1.05])
-  const sc4 = useTransform(progress, [0.82, 1.0],  [1.0, 1.04])
+export function PhoneLayers({ progress }: Props) {
+
+  // ── Opacity crossfades (wide 10% windows) ────────────────────────
+  const op0 = useTransform(progress, [0,    0.15, 0.25],       [1, 1, 0])
+  const op1 = useTransform(progress, [0.15, 0.25, 0.35, 0.45], [0, 1, 1, 0])
+  const op2 = useTransform(progress, [0.35, 0.45, 0.55, 0.65], [0, 1, 1, 0])
+  const op3 = useTransform(progress, [0.55, 0.65, 0.75, 0.85], [0, 1, 1, 0])
+  const op4 = useTransform(progress, [0.75, 0.85, 1.0],        [0, 1, 1])
+
+  // ── Scale: Ken Burns hold + zoom-in on exit (cinematic push) ─────
+  // Each scene enters slightly zoomed in, pulls back during hold, then pushes back in as it exits
+  const sc0 = useTransform(progress, [0,    0.15, 0.25], [1.06, 1.0,  1.08])
+  const sc1 = useTransform(progress, [0.15, 0.25, 0.35, 0.45], [1.03, 1.0, 1.0, 1.07])
+  const sc2 = useTransform(progress, [0.35, 0.45, 0.55, 0.65], [1.03, 1.0, 1.0, 1.07])
+  const sc3 = useTransform(progress, [0.55, 0.65, 0.75, 0.85], [1.03, 1.0, 1.0, 1.07])
+  const sc4 = useTransform(progress, [0.75, 0.85, 1.0],        [1.03, 1.0, 1.03])
 
   const ops    = [op0, op1, op2, op3, op4]
   const scales = [sc0, sc1, sc2, sc3, sc4]
 
-  // Bottom vignette opacity: visible when text sits over bottom of images
+  // Bottom vignette — active when text lives at bottom
   const vigOp = useTransform(
     progress,
-    [0, 0.60, 0.65, 0.78, 0.82, 1.0],
+    [0, 0.62, 0.67, 0.78, 0.82, 1.0],
     [1,  1,    0,    0,    1,    1],
   )
 
@@ -59,12 +64,12 @@ export function PhoneLayers({ progress }: Props) {
         </motion.div>
       ))}
 
-      {/* Vignette — ensures text legibility at bottom */}
+      {/* Vignette for bottom text readability */}
       <motion.div
         className="absolute inset-x-0 bottom-0 pointer-events-none"
         style={{
-          height: '40%',
-          background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 60%, transparent 100%)',
+          height: '45%',
+          background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.22) 55%, transparent 100%)',
           opacity: vigOp,
         }}
       />

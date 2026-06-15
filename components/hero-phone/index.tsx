@@ -5,6 +5,7 @@ import { useScroll, useSpring } from 'framer-motion'
 import Lenis from 'lenis'
 import { PhoneLayers } from './PhoneLayers'
 import { PhoneOverlay } from './PhoneOverlay'
+import { StoryNav } from './StoryNav'
 
 export function HeroPhone() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -21,17 +22,19 @@ export function HeroPhone() {
     offset: ['start start', 'end end'],
   })
 
+  // Slightly heavier spring for a cinematic, languid feel
   const progress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 25,
+    stiffness: 60,
+    damping: 28,
     restDelta: 0.001,
   })
 
   return (
-    <div ref={containerRef} id="home" className="relative" style={{ height: '560vh' }}>
+    <div ref={containerRef} id="home" className="relative" style={{ height: '750vh' }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         <PhoneLayers progress={progress} />
         <PhoneOverlay progress={progress} />
+        <StoryNav progress={progress} />
       </div>
     </div>
   )
