@@ -15,6 +15,7 @@ export function FilmLights({ progressRef }: Props) {
   const ambientRef  = useRef<THREE.AmbientLight>(null)
   const frontRef    = useRef<THREE.DirectionalLight>(null)
   const islandRef   = useRef<THREE.PointLight>(null)
+  const backFillRef = useRef<THREE.DirectionalLight>(null)
 
   useFrame(() => {
     const p = progressRef.current
@@ -71,6 +72,14 @@ export function FilmLights({ progressRef }: Props) {
                    0.32
     }
 
+    // ── Scene 6-7: back fill — illuminates screen from -Z camera side
+    if (backFillRef.current) {
+      backFillRef.current.intensity =
+        p < 0.73 ? 0 :
+        p < 0.79 ? Math.min(1, (p - 0.73) / 0.06) * 0.55 :
+                   0.55
+    }
+
     // ── Scene 5: camera island fill — lens "depth" as camera orbits ─
     // A warm point light near the camera island illuminates the lenses
     // and creates the "lit with depth" effect the storyboard calls for.
@@ -112,6 +121,9 @@ export function FilmLights({ progressRef }: Props) {
 
       {/* Scene 5 ── camera island fill — orbits with camera */}
       <pointLight ref={islandRef} intensity={0} distance={1.5} decay={2} color="#ffe0a0" />
+
+      {/* Scene 6-7 ── back fill — from -Z, illuminates screen side */}
+      <directionalLight ref={backFillRef} position={[0.3, 0.8, -5.0]} intensity={0} color="#fff8f0" />
     </>
   )
 }

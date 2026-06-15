@@ -31,6 +31,17 @@ export function FilmOverlay({ scrollProgress: p }: Props) {
   // ── Scene 5: warm haze — HTML overlay ────────────────────────────
   const hazeOpacity = fadeRange(p, 0.57, 0.65, 0.99, 1.0)
 
+  // ── Scene 6: THE PROMISE ──────────────────────────────────────────
+  const s6Heading = fadeRange(p, 0.74, 0.78, 0.83, 0.85)
+  const s6Trust1  = fadeRange(p, 0.76, 0.79, 0.83, 0.85)
+  const s6Trust2  = fadeRange(p, 0.78, 0.81, 0.83, 0.85)
+  const s6Trust3  = fadeRange(p, 0.80, 0.83, 0.83, 0.85)
+
+  // ── Scene 7: THE INVITATION ───────────────────────────────────────
+  const s7Label   = fadeRange(p, 0.87, 0.91, 0.98, 1.0)
+  const s7Heading = fadeRange(p, 0.89, 0.93, 0.98, 1.0)
+  const s7CTA     = fadeRange(p, 0.91, 0.95, 0.98, 1.0)
+
   return (
     <div className="absolute inset-0 z-10 pointer-events-none select-none">
 
@@ -154,6 +165,82 @@ export function FilmOverlay({ scrollProgress: p }: Props) {
             كل شيء يستحق التوثيق
           </span>
         </div>
+      </div>
+
+      {/* ── Scene 6: THE PROMISE ─────────────────────────────────── */}
+      <div className="absolute top-[12%] left-0 right-0 flex flex-col items-center gap-2">
+        <div style={{ opacity: s6Heading, transform: `translateY(${(1 - s6Heading) * 18}px)` }}>
+          <h2
+            className="font-display text-4xl md:text-5xl text-center"
+            style={{ color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em' }}
+          >
+            للذين يبنون الغد
+          </h2>
+        </div>
+      </div>
+
+      <div className="absolute bottom-10 left-0 right-0 flex justify-center gap-10 md:gap-16">
+        {[
+          { stat: '40+', label: 'شريك دولي' },
+          { stat: '2008', label: 'منذ عام' },
+          { stat: '24 / 7', label: 'دعم متواصل' },
+        ].map(({ stat, label }, i) => {
+          const opacities = [s6Trust1, s6Trust2, s6Trust3]
+          const op = opacities[i]
+          return (
+            <div
+              key={stat}
+              className="flex flex-col items-center gap-1"
+              style={{ opacity: op, transform: `translateY(${(1 - op) * 8}px)` }}
+            >
+              <span
+                className="text-white text-2xl md:text-3xl font-light tracking-tight"
+                style={{ fontFamily: "var(--font-sans, 'Jost', sans-serif)" }}
+              >
+                {stat}
+              </span>
+              <span
+                className="text-[#C4922A]/70 text-[10px] tracking-[0.12em] uppercase"
+                style={{ fontFamily: "'Cairo', sans-serif" }}
+              >
+                {label}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* ── Scene 7: THE INVITATION ──────────────────────────────────── */}
+      <div className="absolute top-[8%] left-0 right-0 flex flex-col items-center gap-1">
+        <div style={{ opacity: s7Label }}>
+          <span
+            className="text-[#C4922A]/60 text-[10px] uppercase tracking-[0.3em]"
+            style={{ fontFamily: "var(--font-sans, 'Jost', sans-serif)" }}
+          >
+            Mr. Ismail Trading LLC
+          </span>
+        </div>
+        <div style={{ opacity: s7Heading, transform: `translateY(${(1 - s7Heading) * 10}px)` }}>
+          <p
+            className="text-white/80 text-sm md:text-base text-center tracking-[0.08em]"
+            style={{ fontFamily: "var(--font-sans, 'Jost', sans-serif)", fontWeight: 300 }}
+          >
+            Flagship Devices for Wholesale
+          </p>
+        </div>
+      </div>
+
+      <div
+        className="absolute bottom-12 left-0 right-0 flex justify-center"
+        style={{ opacity: s7CTA, transform: `translateY(${(1 - s7CTA) * 12}px)` }}
+      >
+        <a
+          href="#collection"
+          className="btn-bronze px-8 py-3 text-sm tracking-[0.12em] uppercase pointer-events-auto"
+          style={{ fontFamily: "var(--font-sans, 'Jost', sans-serif)", fontWeight: 500 }}
+        >
+          View Collection →
+        </a>
       </div>
 
     </div>

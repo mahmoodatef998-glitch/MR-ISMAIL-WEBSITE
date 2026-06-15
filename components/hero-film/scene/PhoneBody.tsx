@@ -45,9 +45,15 @@ export function PhoneBody({ progressRef }: Props) {
     } else if (p < 0.47) {
       // Scene 4 entry: 180° → 0° (flip back to front for screen reveal)
       yRot = lerp(Math.PI, 0, easeInOut((p - 0.43) / 0.04))
-    } else {
-      // Scene 4-5+: front facing (camera orbits in Scene 5, phone stays still)
+    } else if (p < 0.71) {
+      // Scene 4-5: front facing (camera orbits in Scene 5)
       yRot = 0
+    } else if (p < 0.75) {
+      // Scene 6 entry: 0° → 180° flip (screen now faces -Z camera)
+      yRot = easeInOut((p - 0.71) / 0.04) * Math.PI
+    } else {
+      // Scene 6-7: screen faces -Z camera
+      yRot = Math.PI
     }
     groupRef.current.rotation.y = yRot
 

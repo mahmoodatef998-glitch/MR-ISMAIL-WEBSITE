@@ -70,10 +70,26 @@ export function FilmCamera({ progressRef }: Props) {
       camera.position.set(Math.sin(angle) * 2.8, 0, Math.cos(angle) * 2.8)
       fov = 45
 
-    } else {
-      // Hold at back of phone for Scene 6 transition
-      camera.position.set(0, 0, -2.8)
+    // ── Scene 6 entry: ease back to reveal screen ────────────────
+    } else if (p <= 0.75) {
+      const t = easeInOut((p - 0.71) / 0.04)
+      camera.position.set(0, 0, lerp(-2.8, -3.8, t))
       fov = 45
+
+    // ── Scene 6: THE PROMISE — hold ──────────────────────────────
+    } else if (p <= 0.85) {
+      camera.position.set(0, 0, -3.8)
+      fov = 45
+
+    // ── Scene 7: THE INVITATION — zoom in, FOV tightens ──────────
+    } else if (p <= 0.93) {
+      const t = easeInOut((p - 0.85) / 0.08)
+      camera.position.set(0, 0, lerp(-3.8, -2.0, t))
+      fov = lerp(45, 28, t)
+
+    } else {
+      camera.position.set(0, 0, -2.0)
+      fov = 28
     }
 
     // Universal lookAt — camera ALWAYS points at the phone center
