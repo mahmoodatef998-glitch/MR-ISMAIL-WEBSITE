@@ -27,7 +27,7 @@ export function PhoneBody({ progressRef }: Props) {
     const p = progressRef.current
     if (!groupRef.current) return
 
-    // Scale 0 in Scene 1 — phone was always in the dark, the light reveals it
+    // Scale 0 in Scene 1 — phone was always there, just waiting for the light
     groupRef.current.scale.setScalar(p > 0.12 ? 1 : 0)
 
     // ── Y rotation choreography ────────────────────────────────────
@@ -35,29 +35,32 @@ export function PhoneBody({ progressRef }: Props) {
     if (p < 0.24) {
       yRot = 0
     } else if (p < 0.28) {
-      // Scene 2 money shot: 0 → -15° (right edge toward camera)
+      // Scene 2: money shot —  0 → -15°
       yRot = -easeInOut((p - 0.24) / 0.04) * (Math.PI / 12)
     } else if (p < 0.32) {
-      // Scene 3 entry: -15° → 180° (flip to reveal back)
+      // Scene 3 entry: -15° → 180° (reveal back)
       yRot = lerp(-Math.PI / 12, Math.PI, easeInOut((p - 0.28) / 0.04))
     } else if (p < 0.43) {
       yRot = Math.PI
     } else if (p < 0.47) {
-      // Scene 4 entry: 180° → 0° (flip back to front, screen will activate)
+      // Scene 4 entry: 180° → 0° (flip back to front for screen reveal)
       yRot = lerp(Math.PI, 0, easeInOut((p - 0.43) / 0.04))
     } else {
+      // Scene 4-5+: front facing (camera orbits in Scene 5, phone stays still)
       yRot = 0
     }
-
     groupRef.current.rotation.y = yRot
 
-    // ── X rotation: Scene 4 end — screen tilts toward user ────────
-    // Negative X = top of phone tilts toward camera = eye contact
+    // ── X rotation: Scene 4 end — screen tilts toward user ─────────
     let xRot = 0
     if (p > 0.54 && p <= 0.57) {
+      // Scene 4 forward tilt: 0 → -5°
       xRot = -easeInOut((p - 0.54) / 0.03) * (5 * Math.PI / 180)
+    } else if (p > 0.57 && p <= 0.59) {
+      // Scene 5 entry: reset tilt so orbit is clean
+      xRot = lerp(-(5 * Math.PI / 180), 0, easeInOut((p - 0.57) / 0.02))
     } else if (p > 0.57) {
-      xRot = -(5 * Math.PI / 180)
+      xRot = 0
     }
     groupRef.current.rotation.x = xRot
   })
@@ -77,9 +80,8 @@ export function PhoneBody({ progressRef }: Props) {
 
       {/*
         ── Back glass ──────────────────────────────────────────────
-        Normal points -Z in local space (rotation={[Math.PI,0,0]}).
-        After group Y=180° (Scene 3): local -Z → world +Z = toward camera. ✓
-        After group Y=0° (Scene 4): faces away from camera. ✓
+        Scene 3: phone Y=180° → normal (local -Z) maps to world +Z → visible ✓
+        Scene 5: phone Y=0°, camera orbits to back → DoubleSide makes it visible ✓
       */}
       <mesh position={[0, 0, -(D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
         <planeGeometry args={[W - 0.018, H - 0.018]} />
@@ -89,31 +91,39 @@ export function PhoneBody({ progressRef }: Props) {
           metalness={0.0}
           clearcoat={0.08}
           clearcoatRoughness={0.5}
+          side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/*
-        ── Camera island: upper-left in local space ────────────────
-        Local (-0.088, 0.218, -D/2-0.003) → after Y=180°: world right side ✓
-      */}
+      {/* ── Camera island: upper-left in local back space ─────────── */}
       <group position={[-0.088, 0.218, -(D / 2 + 0.003)]}>
+        {/* Island platform — closed mesh, visible from both sides */}
         <mesh>
           <boxGeometry args={[IS_W, IS_H, IS_D]} />
           <meshStandardMaterial color="#050505" metalness={0.88} roughness={0.10} />
         </mesh>
 
-        {/* Lens circles — rotation={[Math.PI,0,0]}: normal faces -Z (back direction) */}
+        {/* Lenses — DoubleSide for Scene 5 orbit visibility */}
         <mesh position={[-0.038,  0.042, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.022, 40]} />
-          <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
+          <meshPhysicalMaterial
+            color="#02020A" roughness={0.02} metalness={0.08}
+            side={THREE.DoubleSide}
+          />
         </mesh>
         <mesh position={[-0.038, -0.042, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.019, 40]} />
-          <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
+          <meshPhysicalMaterial
+            color="#02020A" roughness={0.02} metalness={0.08}
+            side={THREE.DoubleSide}
+          />
         </mesh>
         <mesh position={[ 0.042,  0.000, -(IS_D / 2 + 0.001)]} rotation={[Math.PI, 0, 0]}>
           <circleGeometry args={[0.016, 40]} />
-          <meshPhysicalMaterial color="#02020A" roughness={0.02} metalness={0.08} />
+          <meshPhysicalMaterial
+            color="#02020A" roughness={0.02} metalness={0.08}
+            side={THREE.DoubleSide}
+          />
         </mesh>
       </group>
 
