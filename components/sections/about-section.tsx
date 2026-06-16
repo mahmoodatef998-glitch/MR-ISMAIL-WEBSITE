@@ -96,7 +96,7 @@ export function AboutSection() {
                   {lang === 'en' ? 'Growth' : 'نمو'}
                 </span>
               </div>
-              <div className="text-8xl font-black mb-1 leading-none">
+              <div className="text-6xl sm:text-8xl font-black mb-1 leading-none">
                 <CountUp end={15} suffix="+" duration={2.5} />
               </div>
               <div className="font-semibold opacity-80">

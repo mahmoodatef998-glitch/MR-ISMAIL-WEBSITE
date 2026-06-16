@@ -43,6 +43,7 @@
   body {
     @apply bg-[#0A0705] text-white;
     font-family: var(--font-sans, system-ui, sans-serif);
+    overflow-x: hidden;
   }
   /* Bodoni Moda for all display headings */
   h1, h2 {
@@ -277,6 +278,10 @@ body::before {
   }
   body::before { display: none; }
 }
+
+/* ── Hero cinematic scroll height — responsive ───── */
+.hero-cinematic-scroll { height: 625vh; }
+@media (max-width: 767px) { .hero-cinematic-scroll { height: 430vh; } }
 
 /* ── Focus states for keyboard nav ────────────────── */
 :focus-visible {

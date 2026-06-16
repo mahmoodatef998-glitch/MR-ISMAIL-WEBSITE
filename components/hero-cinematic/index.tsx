@@ -78,7 +78,7 @@ export function HeroCinematic() {
   const [activeScene, setActiveScene] = useState(0)
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.6 })
+    const lenis = new Lenis({ duration: 1.0 })
     const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf) }
     const id = requestAnimationFrame(raf)
     return () => { lenis.destroy(); cancelAnimationFrame(id) }
@@ -90,8 +90,8 @@ export function HeroCinematic() {
   })
 
   const progress = useSpring(scrollYProgress, {
-    stiffness: 55,
-    damping: 30,
+    stiffness: 120,
+    damping: 28,
     restDelta: 0.001,
   })
 
@@ -150,7 +150,7 @@ export function HeroCinematic() {
   const fills      = [f0,  f1,  f2,  f3,  f4]
 
   return (
-    <div ref={containerRef} id="home" className="relative" style={{ height: '625vh' }}>
+    <div ref={containerRef} id="home" className="hero-cinematic-scroll relative">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
 
         {/* ── Image layers ─────────────────────────────────────── */}
@@ -195,7 +195,7 @@ export function HeroCinematic() {
 
               {scene.title && (
                 <h1
-                  className="text-white text-4xl md:text-6xl font-light tracking-tight leading-none"
+                  className="text-white text-3xl sm:text-5xl md:text-6xl font-light tracking-tight leading-none"
                   style={{ fontFamily: 'var(--font-sans)' }}
                 >
                   {scene.title}
@@ -204,7 +204,7 @@ export function HeroCinematic() {
 
               {scene.subtitle && (
                 <p
-                  className="text-white/52 text-sm md:text-base tracking-[0.18em] uppercase"
+                  className="text-white/52 text-xs sm:text-sm md:text-base tracking-[0.18em] uppercase"
                   style={{ fontFamily: 'var(--font-sans)', fontWeight: 300 }}
                 >
                   {scene.subtitle}
@@ -223,7 +223,7 @@ export function HeroCinematic() {
               {scene.cta && (
                 <a
                   href="#collection"
-                  className="btn-bronze px-10 py-3.5 text-sm tracking-[0.12em] uppercase pointer-events-auto mt-4"
+                  className="btn-bronze px-8 sm:px-10 py-3 sm:py-3.5 text-xs sm:text-sm tracking-[0.12em] uppercase pointer-events-auto mt-4 rounded-xl"
                   style={{ fontFamily: 'var(--font-sans)', fontWeight: 500 }}
                 >
                   {scene.cta}
@@ -255,8 +255,8 @@ export function HeroCinematic() {
           ))}
         </div>
 
-        {/* ── Story nav — right side ────────────────────────────── */}
-        <div className="absolute right-5 inset-y-0 z-50 flex items-center pointer-events-none select-none">
+        {/* ── Story nav — right side (desktop only) ────────────── */}
+        <div className="absolute right-5 inset-y-0 z-50 hidden md:flex items-center pointer-events-none select-none">
           <div className="relative flex flex-col items-end" style={{ gap: '1.8rem' }}>
             {/* Track line background */}
             <div

@@ -110,8 +110,8 @@ function MobileCard({ product, onNext, onPrev, direction }: MobileCardProps) {
         style={{
           width: '90vw',
           maxWidth: 400,
-          height: '72vh',
-          maxHeight: 580,
+          height: '62vh',
+          maxHeight: 520,
           background: '#0c0805',
         }}
       >
