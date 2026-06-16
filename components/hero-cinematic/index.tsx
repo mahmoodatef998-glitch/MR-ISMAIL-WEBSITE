@@ -55,8 +55,30 @@ const SCENES = [
     subtitle: null,
     body:     null,
     arabic:   false,
-    cta:      'اكتشف المجموعة →',
+    cta:      null,
     navLabel: 'Build',
+  },
+  {
+    src:      '/storyboard/scene-05.jpg',
+    alt:      'iPhone 17 Pro Max Dynamic Island Display front view',
+    eyebrow:  'Super Retina XDR · Dynamic Island',
+    title:    'Always On.',
+    subtitle: 'Always Alive.',
+    body:     null,
+    arabic:   false,
+    cta:      null,
+    navLabel: 'Display',
+  },
+  {
+    src:      '/storyboard/scene-06.jpg',
+    alt:      'iPhone 17 Pro Max Desert Titanium Orange signature',
+    eyebrow:  'Desert Titanium Orange — حصري في دبي',
+    title:    'يُعاد تعريف الفخامة',
+    subtitle: null,
+    body:     null,
+    arabic:   true,
+    cta:      'اكتشف المجموعة →',
+    navLabel: 'Order',
   },
 ] as const
 
@@ -85,51 +107,67 @@ export function HeroCinematic() {
   })
 
   // ── Per-scene opacity (fade in → hold → fade out) ──────────────────────────
-  const op0 = useTransform(progress, [0.00, 0.06, 0.20, 0.27], [0, 1, 1, 0])
-  const op1 = useTransform(progress, [0.22, 0.30, 0.46, 0.53], [0, 1, 1, 0])
-  const op2 = useTransform(progress, [0.47, 0.55, 0.71, 0.78], [0, 1, 1, 0])
-  const op3 = useTransform(progress, [0.73, 0.81, 0.96, 1.00], [0, 1, 1, 1])
+  const op0 = useTransform(progress, [0.00, 0.05, 0.13, 0.20], [0, 1, 1, 0])
+  const op1 = useTransform(progress, [0.14, 0.22, 0.30, 0.37], [0, 1, 1, 0])
+  const op2 = useTransform(progress, [0.31, 0.38, 0.47, 0.53], [0, 1, 1, 0])
+  const op3 = useTransform(progress, [0.47, 0.55, 0.62, 0.70], [0, 1, 1, 0])
+  const op4 = useTransform(progress, [0.63, 0.71, 0.80, 0.87], [0, 1, 1, 0])
+  const op5 = useTransform(progress, [0.81, 0.88, 0.97, 1.00], [0, 1, 1, 1])
 
   // ── Ken Burns scale (slow zoom while holding) ──────────────────────────────
-  const sc0 = useTransform(progress, [0.00, 0.28], [1.00, 1.08])
-  const sc1 = useTransform(progress, [0.22, 0.54], [1.00, 1.08])
-  const sc2 = useTransform(progress, [0.47, 0.79], [1.00, 1.08])
-  const sc3 = useTransform(progress, [0.73, 1.00], [1.00, 1.06])
+  const sc0 = useTransform(progress, [0.00, 0.20], [1.00, 1.08])
+  const sc1 = useTransform(progress, [0.14, 0.38], [1.00, 1.08])
+  const sc2 = useTransform(progress, [0.31, 0.54], [1.00, 1.08])
+  const sc3 = useTransform(progress, [0.47, 0.71], [1.00, 1.08])
+  const sc4 = useTransform(progress, [0.63, 0.88], [1.00, 1.08])
+  const sc5 = useTransform(progress, [0.81, 1.00], [1.00, 1.06])
 
   // ── Parallax Y ──────────────────────────────────────────────────────────────
-  const y0 = useTransform(progress, [0.00, 0.28], [0,   -60])
-  const y1 = useTransform(progress, [0.22, 0.54], [50,  -60])
-  const y2 = useTransform(progress, [0.47, 0.79], [50,  -60])
-  const y3 = useTransform(progress, [0.73, 1.00], [50,  -40])
+  const y0 = useTransform(progress, [0.00, 0.20], [0,  -60])
+  const y1 = useTransform(progress, [0.14, 0.38], [50, -60])
+  const y2 = useTransform(progress, [0.31, 0.54], [50, -60])
+  const y3 = useTransform(progress, [0.47, 0.71], [50, -60])
+  const y4 = useTransform(progress, [0.63, 0.88], [50, -60])
+  const y5 = useTransform(progress, [0.81, 1.00], [50, -40])
 
   // ── Text slide-up per scene ────────────────────────────────────────────────
-  const ty0 = useTransform(progress, [0.00, 0.09], [28, 0])
-  const ty1 = useTransform(progress, [0.22, 0.33], [28, 0])
-  const ty2 = useTransform(progress, [0.47, 0.58], [28, 0])
-  const ty3 = useTransform(progress, [0.73, 0.84], [28, 0])
+  const ty0 = useTransform(progress, [0.00, 0.07], [28, 0])
+  const ty1 = useTransform(progress, [0.14, 0.24], [28, 0])
+  const ty2 = useTransform(progress, [0.31, 0.40], [28, 0])
+  const ty3 = useTransform(progress, [0.47, 0.57], [28, 0])
+  const ty4 = useTransform(progress, [0.63, 0.73], [28, 0])
+  const ty5 = useTransform(progress, [0.81, 0.90], [28, 0])
 
-  // ── Story bar fills ────────────────────────────────────────────────────────
-  const f0 = useTransform(progress, [0.00, 0.25], [0, 1])
-  const f1 = useTransform(progress, [0.25, 0.50], [0, 1])
-  const f2 = useTransform(progress, [0.50, 0.75], [0, 1])
-  const f3 = useTransform(progress, [0.75, 1.00], [0, 1])
+  // ── Story bar fills (6 equal segments) ────────────────────────────────────
+  const f0 = useTransform(progress, [0.0000, 0.1667], [0, 1])
+  const f1 = useTransform(progress, [0.1667, 0.3333], [0, 1])
+  const f2 = useTransform(progress, [0.3333, 0.5000], [0, 1])
+  const f3 = useTransform(progress, [0.5000, 0.6667], [0, 1])
+  const f4 = useTransform(progress, [0.6667, 0.8333], [0, 1])
+  const f5 = useTransform(progress, [0.8333, 1.0000], [0, 1])
 
   // ── Scroll hint opacity ────────────────────────────────────────────────────
-  const scrollHintOp = useTransform(progress, [0, 0.07], [1, 0])
+  const scrollHintOp = useTransform(progress, [0, 0.05], [1, 0])
 
   // ── Active scene ──────────────────────────────────────────────────────────
   useMotionValueEvent(progress, 'change', (v) => {
-    setActiveScene(v < 0.25 ? 0 : v < 0.50 ? 1 : v < 0.75 ? 2 : 3)
+    setActiveScene(
+      v < 0.1667 ? 0 :
+      v < 0.3333 ? 1 :
+      v < 0.5000 ? 2 :
+      v < 0.6667 ? 3 :
+      v < 0.8333 ? 4 : 5
+    )
   })
 
-  const opacities  = [op0, op1, op2, op3]
-  const scales     = [sc0, sc1, sc2, sc3]
-  const parallaxYs = [y0,  y1,  y2,  y3]
-  const textYs     = [ty0, ty1, ty2, ty3]
-  const fills      = [f0,  f1,  f2,  f3]
+  const opacities  = [op0, op1, op2, op3, op4, op5]
+  const scales     = [sc0, sc1, sc2, sc3, sc4, sc5]
+  const parallaxYs = [y0,  y1,  y2,  y3,  y4,  y5]
+  const textYs     = [ty0, ty1, ty2, ty3, ty4, ty5]
+  const fills      = [f0,  f1,  f2,  f3,  f4,  f5]
 
   return (
-    <div ref={containerRef} id="home" className="relative" style={{ height: '500vh' }}>
+    <div ref={containerRef} id="home" className="relative" style={{ height: '750vh' }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
 
         {/* ── Image layers ─────────────────────────────────────── */}
@@ -241,7 +279,7 @@ export function HeroCinematic() {
 
         {/* ── Story nav — right side ────────────────────────────── */}
         <div className="absolute right-5 inset-y-0 z-50 flex items-center pointer-events-none select-none">
-          <div className="relative flex flex-col items-end" style={{ gap: '2rem' }}>
+          <div className="relative flex flex-col items-end" style={{ gap: '1.6rem' }}>
             {/* Track line background */}
             <div
               className="absolute"
