@@ -15,7 +15,7 @@ import Image from 'next/image'
 
 const SCENES = [
   {
-    src:      '/storyboard/scene-04.jpg.png',
+    src:      '/storyboard/scene-01.jpg.jpg.png',
     alt:      'iPhone 17 Pro Max Desert Titanium floating',
     eyebrow:  'Mr. Ismail Trading LLC — Dubai',
     title:    'iPhone 17 Pro Max',
@@ -26,7 +26,7 @@ const SCENES = [
     navLabel: 'Hero',
   },
   {
-    src:      '/storyboard/scene-01.jpg.jpg',
+    src:      '/storyboard/scene-02.jpg.jpg.png',
     alt:      'iPhone 17 Pro Max Pro Camera System close-up',
     eyebrow:  'Pro Camera System',
     title:    '48 MP · 5× · ƒ/1.6',
@@ -37,7 +37,7 @@ const SCENES = [
     navLabel: 'Camera',
   },
   {
-    src:      '/storyboard/scene-02.jpg.jpg',
+    src:      '/storyboard/scene-03.jpg.jpg.jpg',
     alt:      'iPhone 17 Pro Max front and back reveal',
     eyebrow:  'Desert Titanium — حصري في الخليج',
     title:    'بلا حدود',
@@ -48,7 +48,7 @@ const SCENES = [
     navLabel: 'Design',
   },
   {
-    src:      '/storyboard/scene-03.jpg.png',
+    src:      '/storyboard/scene-04.jpg.jpg.png',
     alt:      'iPhone 17 Pro Max 4-Layer Architecture',
     eyebrow:  null,
     title:    null,
@@ -59,7 +59,7 @@ const SCENES = [
     navLabel: 'Build',
   },
   {
-    src:      '/storyboard/scene-05.jpg',
+    src:      '/storyboard/scene-05.jpg.jpg.png',
     alt:      'iPhone 17 Pro Max Dynamic Island Display front view',
     eyebrow:  'Super Retina XDR · Dynamic Island',
     title:    'Always On.',
@@ -70,7 +70,7 @@ const SCENES = [
     navLabel: 'Display',
   },
   {
-    src:      '/storyboard/scene-06.jpg',
+    src:      '/storyboard/scene-06.jpg.jpg.png',
     alt:      'iPhone 17 Pro Max Desert Titanium Orange signature',
     eyebrow:  'Desert Titanium Orange — حصري في دبي',
     title:    'يُعاد تعريف الفخامة',
