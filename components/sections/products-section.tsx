@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/hooks/use-language'
 import { Product } from '@/types'
-import { Tag, ArrowUpRight, ArrowRight } from 'lucide-react'
+import { ArrowRight, Tag } from 'lucide-react'
 import { m, AnimatePresence } from 'framer-motion'
 import { fadeUp, fadeLeft, fadeRight, stagger, scaleIn, viewportOnce } from '@/lib/motion'
+import { ScrollGallery } from './scroll-gallery'
+import { MobileGallery } from './mobile-gallery'
 
 interface Props {
   products: Product[]
@@ -25,7 +26,6 @@ export function ProductsSection({ products }: Props) {
   const [cat, setCat] = useState('All')
 
   const filtered = cat === 'All' ? products : products.filter((p) => p.category === cat)
-  const shown = filtered.slice(0, 9)
 
   return (
     <section id="products" className="py-24 bg-[#080503]">
@@ -87,121 +87,80 @@ export function ProductsSection({ products }: Props) {
           ))}
         </m.div>
 
-        {/* Grid */}
-        <AnimatePresence mode="wait">
-          {shown.length === 0 ? (
-            <m.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-24"
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C4922A]/10 border border-[#C4922A]/20 mb-6">
-                <Tag className="w-7 h-7 text-[#C4922A]" />
-              </div>
-              <h3 className="text-white font-bold text-lg mb-2">
-                {lang === 'en' ? 'Catalog Coming Soon' : 'الكتالوج قريبًا'}
-              </h3>
-              <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">
-                {lang === 'en'
-                  ? 'Our full product catalog is being updated. Contact us directly for pricing and availability.'
-                  : 'يتم تحديث كتالوج المنتجات الكامل. تواصل معنا مباشرة للأسعار والتوفر.'}
-              </p>
-              <a
-                href="#contact"
-                onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C4922A]/10 border border-[#C4922A]/25 text-[#C4922A] font-semibold text-sm rounded-xl hover:bg-[#C4922A]/15 transition-all"
-              >
-                {lang === 'en' ? 'Request a Quote' : 'طلب عرض سعر'}
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </m.div>
-          ) : (
-            <m.div
-              key={cat}
-              initial="hidden"
-              animate="show"
-              exit={{ opacity: 0, transition: { duration: 0.15 } }}
-              variants={stagger(0.05, 0.08)}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-                {shown.map((product) => (
-                  <m.div key={product.id} variants={fadeUp}>
-                    <ProductCard product={product} lang={lang} />
-                  </m.div>
-                ))}
-              </div>
-
-              {filtered.length > 9 && (
-                <m.div variants={fadeUp} className="text-center">
-                  <Link
-                    href="/products"
-                    className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#c8a96e]/25 text-[#c8a96e] font-semibold rounded-xl hover:bg-[#c8a96e]/[0.08] hover:border-[#c8a96e]/50 transition-all text-sm"
-                  >
-                    {lang === 'en' ? `View All ${filtered.length} Products` : `عرض كل ${filtered.length} منتج`}
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
-                </m.div>
-              )}
-            </m.div>
-          )}
-        </AnimatePresence>
-
       </div>
+
+      {/* Galleries */}
+      <AnimatePresence mode="wait">
+        {filtered.length === 0 ? (
+          <m.div
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="max-w-7xl mx-auto px-4 sm:px-6 text-center py-24"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C4922A]/10 border border-[#C4922A]/20 mb-6">
+              <Tag className="w-7 h-7 text-[#C4922A]" />
+            </div>
+            <h3 className="text-white font-bold text-lg mb-2">
+              {lang === 'en' ? 'Catalog Coming Soon' : 'الكتالوج قريبًا'}
+            </h3>
+            <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">
+              {lang === 'en'
+                ? 'Our full product catalog is being updated. Contact us directly for pricing and availability.'
+                : 'يتم تحديث كتالوج المنتجات الكامل. تواصل معنا مباشرة للأسعار والتوفر.'}
+            </p>
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#C4922A]/10 border border-[#C4922A]/25 text-[#C4922A] font-semibold text-sm rounded-xl hover:bg-[#C4922A]/15 transition-all"
+            >
+              {lang === 'en' ? 'Request a Quote' : 'طلب عرض سعر'}
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </m.div>
+        ) : (
+          <m.div
+            key={cat}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          >
+            {/* Desktop: 3D staircase gallery (md+) */}
+            <div className="hidden md:block">
+              <ScrollGallery products={filtered} />
+            </div>
+
+            {/* Mobile: swipeable card deck (< md) */}
+            <div className="flex justify-center md:hidden">
+              <MobileGallery products={filtered} />
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* View Full Catalog link */}
+      {filtered.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 flex justify-center">
+          <m.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+          >
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#c8a96e]/25 text-[#c8a96e] font-semibold rounded-xl hover:bg-[#c8a96e]/[0.08] hover:border-[#c8a96e]/50 transition-all text-sm"
+            >
+              {lang === 'en' ? 'View Full Catalog' : 'عرض الكتالوج الكامل'}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </m.div>
+        </div>
+      )}
     </section>
-  )
-}
-
-function ProductCard({ product, lang }: { product: Product; lang: string }) {
-  const name = lang === 'ar' && product.nameAr ? product.nameAr : product.name
-  const img = product.images[0]
-
-  return (
-    <Link href={`/products/${product.slug}`} className="group block">
-      <m.div
-        whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-        className="card-shimmer bg-[#130B03] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-[#C4922A]/30 hover:shadow-xl hover:shadow-black/40 transition-colors duration-300"
-      >
-        {/* Image */}
-        <div className="relative h-52 bg-gradient-to-br from-[#1C0E04] to-[#0A0705] flex items-center justify-center overflow-hidden">
-          {img ? (
-            <Image
-              src={img} alt={name} fill
-              className="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
-            />
-          ) : (
-            <Tag className="w-14 h-14 text-white/[0.08]" />
-          )}
-          <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-[#080503]/80 backdrop-blur-sm border border-white/10 text-gray-400 text-[10px] font-medium rounded-full">
-            {product.category}
-          </span>
-          {product.featured && (
-            <span className="absolute top-3 right-3 px-2.5 py-1 bg-gradient-to-r from-[#C4922A] to-[#D4A840] text-[#080503] text-[10px] font-black rounded-full uppercase tracking-wider">
-              {lang === 'en' ? 'Featured' : 'مميز'}
-            </span>
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="p-4">
-          <p className="text-[10px] font-bold text-[#C4922A] uppercase tracking-[0.15em] mb-1.5">{product.brand}</p>
-          <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-[#C4922A] transition-colors duration-200 mb-4">
-            {name}
-          </h3>
-          <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-            <div className="text-xs text-gray-500">
-              {lang === 'en' ? 'MOQ' : 'الحد الأدنى'}:{' '}
-              <span className="text-[#C4922A] font-bold text-sm">{product.moq}</span>{' '}
-              <span className="text-gray-600">{lang === 'en' ? 'units' : 'وحدة'}</span>
-            </div>
-            <div className="flex items-center gap-1 text-xs font-semibold text-gray-500 group-hover:text-[#C4922A] transition-colors">
-              {lang === 'en' ? 'Details' : 'التفاصيل'}
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </div>
-          </div>
-        </div>
-      </m.div>
-    </Link>
   )
 }
