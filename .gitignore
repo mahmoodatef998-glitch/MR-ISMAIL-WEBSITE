@@ -43,3 +43,8 @@ prisma/dev.db
 next-env.d.ts
 
 /app/generated/prisma
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
